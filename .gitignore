@@ -1,0 +1,20 @@
+# Ambiente Python
+venv/
+.env
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Banco local
+relatorios.db
+*.db
+
+# Sistema / editor
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log

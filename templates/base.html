@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Sistema de Relatórios Técnicos E2nPrinter</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <header class="topo">
+    <div class="topo-marca">
+<img class="topo-logo" src="{{ url_for('static', filename='logo-e2nprinter-white.svg') }}" alt="E2nPrinter">    </div>
+
+    <nav>
+        <a href="{{ url_for('index') }}">Novo relatório</a>
+        <a href="{{ url_for('admin') }}?token={{ request.args.get('token', '123456') }}">Painel</a>
+    </nav>
+</header>
+
+    <main class="container">
+        {% block conteudo %}{% endblock %}
+    </main>
+</body>
+</html>

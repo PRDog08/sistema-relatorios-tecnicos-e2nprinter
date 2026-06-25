@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+
+{% block conteudo %}
+
+{% set data_raw = relatorio["criado_em"][:10] if relatorio["criado_em"] else "" %}
+
+{% if "-" in data_raw %}
+    {% set data_formatada = data_raw[8:10] ~ "/" ~ data_raw[5:7] ~ "/" ~ data_raw[0:4] %}
+{% else %}
+    {% set data_formatada = data_raw %}
+{% endif %}
+
+{% set data_criacao = relatorio["criado_em"][:10] if relatorio["criado_em"] else "" %}
+{% set data_br = data_criacao[8:10] ~ "/" ~ data_criacao[5:7] ~ "/" ~ data_criacao[0:4] if data_criacao else "-" %}
+
+<section class="rat-view">
+
+    <div class="rat-print">
+        <img class="rat-fundo" src="{{ url_for('static', filename='rat-modelo.png') }}" alt="Modelo RAT E2nPrinter">
+
+        <div class="rat-campo rat-cliente">{{ relatorio["cliente"] or "-" }}</div>
+        <div class="rat-campo rat-hora-inicio">{{ relatorio["hora_inicio"] or "-" }}</div>
+
+        <div class="rat-campo rat-responsavel">{{ relatorio["responsavel"] or "-" }}</div>
+        <div class="rat-campo rat-telefone">{{ relatorio["telefone"] or "-" }}</div>
+        <div class="rat-campo rat-hora-fim">{{ relatorio["hora_fim"] or "-" }}</div>
+
+        <div class="rat-campo rat-endereco">{{ relatorio["endereco"] or "-" }}</div>
+        <div class="rat-campo rat-data">{{ data_formatada or "-" }}</div>
+        <div class="rat-campo rat-cidade">{{ relatorio["cidade"] or "-" }}</div>
+        <div class="rat-campo rat-bairro">{{ relatorio["bairro"] or "-" }}</div>
+        <div class="rat-campo rat-cep">{{ relatorio["cep"] or "-" }}</div>
+        <div class="rat-campo rat-uf">{{ relatorio["uf"] or "-" }}</div>
+
+        <div class="rat-campo rat-modelo">{{ relatorio["equipamento"] or "-" }}</div>
+        <div class="rat-campo rat-serie">{{ relatorio["numero_serie"] or "-" }}</div>
+        <div class="rat-campo rat-contador">{{ relatorio["contador_geral"] or "-" }}</div>
+
+        <div class="rat-campo rat-motivo">{{ relatorio["defeito_relatado"] or "-" }}</div>
+
+        <div class="rat-campo rat-diagnostico">
+            Diagnóstico: {{ relatorio["diagnostico"] or "-" }}
+        </div>
+
+        <div class="rat-campo rat-servico-executado">
+            Serviço executado: {{ relatorio["servico_executado"] or "-" }}
+        </div>
+
+        <div class="rat-campo rat-pecas">{{ relatorio["pecas"] or "Nenhuma peça informada." }}</div>
+
+        <div class="rat-campo rat-tecnico">{{ relatorio["tecnico"] or "-" }}</div>
+    </div>
+
+    <div class="acoes rat-acoes">
+        <button type="button" onclick="window.print()">Imprimir / salvar em PDF</button>
+        <a href="{{ url_for('index') }}">Criar novo relatório</a>
+        <a href="{{ url_for('admin') }}?token={{ request.args.get('token', '123456') }}">Voltar ao painel</a>
+    </div>
+
+</section>
+
+{% endblock %}

@@ -1,0 +1,784 @@
+/* =========================================================
+   BASE GERAL
+   ========================================================= */
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, Helvetica, sans-serif;
+    background: #0b1220;
+    color: #edf4ff;
+}
+
+a {
+    color: inherit;
+}
+
+.topo {
+    background: #121c2e;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 18px 28px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+}
+
+.topo-marca {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+}
+
+.topo-logo {
+    display: block;
+    width: 170px;
+    max-width: 100%;
+    height: auto;
+}
+
+.topo-marca p,
+.topo p {
+    margin: 0;
+    color: #9fb0c8;
+    font-size: 14px;
+}
+
+.topo h1 {
+    margin: 0;
+    font-size: 24px;
+}
+
+.topo nav {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.topo a {
+    color: #46d39a;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.container {
+    width: min(1100px, 92%);
+    margin: 32px auto;
+}
+
+.card {
+    background: #121c2e;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 18px;
+    padding: 26px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25);
+}
+
+.card h2 {
+    margin-top: 0;
+}
+
+.card p {
+    color: #9fb0c8;
+}
+
+/* =========================================================
+   FORMULÁRIOS
+   ========================================================= */
+
+.formulario {
+    margin-top: 24px;
+}
+
+.form-section {
+    background: #18243a;
+    border: 1px solid rgba(255, 255, 255, 0.10);
+    border-radius: 16px;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+.form-section h3 {
+    margin: 0 0 18px;
+    color: #edf4ff;
+    font-size: 18px;
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 18px;
+}
+
+label {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    color: #dce8f8;
+    font-weight: bold;
+}
+
+input,
+textarea,
+select {
+    width: 100%;
+    padding: 12px 14px;
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    background: #0b1220;
+    color: #edf4ff;
+    font-size: 15px;
+}
+
+textarea {
+    min-height: 110px;
+    resize: vertical;
+}
+
+.campo-largo {
+    grid-column: 1 / -1;
+}
+
+.form-actions {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 8px;
+}
+
+.form-actions button {
+    margin-top: 0;
+}
+
+/* =========================================================
+   BOTÕES E AÇÕES
+   ========================================================= */
+
+button,
+.botao-secundario,
+.acoes a {
+    border: 0;
+    background: #46d39a;
+    color: #06110d;
+    padding: 12px 18px;
+    border-radius: 12px;
+    font-weight: bold;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+}
+
+button {
+    margin-top: 22px;
+}
+
+.botao-outline {
+    border: 1px solid rgba(70, 211, 154, 0.45);
+    color: #46d39a;
+    background: transparent;
+    padding: 12px 18px;
+    border-radius: 12px;
+    font-weight: bold;
+    text-decoration: none;
+    display: inline-block;
+}
+
+.botao-perigo {
+    background: rgba(255, 124, 124, 0.16);
+    color: #ff7c7c;
+    border: 1px solid rgba(255, 124, 124, 0.45);
+    padding: 12px 18px;
+    border-radius: 12px;
+    font-weight: bold;
+    cursor: pointer;
+    margin: 0;
+}
+
+.botao-perigo:hover {
+    background: rgba(255, 124, 124, 0.25);
+}
+
+.acoes {
+    display: flex;
+    gap: 12px;
+    margin-top: 28px;
+}
+
+/* =========================================================
+   PAINEL ADMINISTRATIVO
+   ========================================================= */
+
+.cabecalho-painel {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 22px;
+}
+
+.resumo-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 14px;
+    margin: 24px 0;
+}
+
+.resumo-card {
+    background: #18243a;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 16px;
+    padding: 18px;
+}
+
+.resumo-card span {
+    display: block;
+    color: #9fb0c8;
+    font-size: 14px;
+    margin-bottom: 8px;
+}
+
+.resumo-card strong {
+    font-size: 30px;
+}
+
+.resumo-card.sucesso {
+    border-color: rgba(70, 211, 154, 0.45);
+}
+
+.resumo-card.alerta {
+    border-color: rgba(255, 203, 107, 0.45);
+}
+
+.resumo-card.peca {
+    border-color: rgba(96, 165, 250, 0.45);
+}
+
+.resumo-card.retorno {
+    border-color: rgba(255, 124, 124, 0.45);
+}
+
+.busca {
+    display: flex;
+    gap: 12px;
+    margin: 22px 0;
+}
+
+.busca input {
+    flex: 1;
+}
+
+.busca button {
+    margin: 0;
+}
+
+.lista-relatorios {
+    display: grid;
+    gap: 16px;
+}
+
+.item-relatorio {
+    background: #18243a;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 16px;
+    padding: 18px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 18px;
+}
+
+.item-relatorio h3 {
+    margin: 0 0 10px;
+}
+
+.item-relatorio p {
+    margin: 6px 0;
+}
+
+.item-relatorio-pro {
+    align-items: center !important;
+}
+
+.info-relatorio {
+    flex: 1;
+}
+
+.linha-titulo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 8px;
+}
+
+.detalhes-relatorio {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 6px 18px;
+    margin-top: 10px;
+}
+
+.detalhes-relatorio p {
+    margin: 0;
+    color: #9fb0c8;
+}
+
+.detalhes-relatorio strong {
+    color: #edf4ff;
+}
+
+.status {
+    display: inline-block;
+    padding: 6px 10px;
+    border-radius: 999px;
+    font-size: 13px;
+    font-weight: bold;
+    background: rgba(255, 255, 255, 0.08);
+    color: #edf4ff;
+}
+
+.status-concluido {
+    background: rgba(70, 211, 154, 0.16);
+    color: #46d39a;
+}
+
+.status-pendente {
+    background: rgba(255, 203, 107, 0.16);
+    color: #ffcb6b;
+}
+
+.status-peca {
+    background: rgba(96, 165, 250, 0.16);
+    color: #60a5fa;
+}
+
+.status-retorno {
+    background: rgba(255, 124, 124, 0.16);
+    color: #ff7c7c;
+}
+
+.acoes-card {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 10px;
+    flex-wrap: wrap;
+    align-self: center;
+}
+
+.acoes-card form {
+    width: auto !important;
+    margin: 0 !important;
+    display: inline-flex !important;
+}
+
+.item-relatorio-pro .acoes-card a,
+.item-relatorio-pro .acoes-card button {
+    width: auto !important;
+    height: auto !important;
+    min-height: 0 !important;
+    padding: 10px 14px !important;
+    margin: 0 !important;
+    line-height: 1 !important;
+    border-radius: 10px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    white-space: nowrap;
+    font-size: 13px;
+}
+
+.estado-vazio {
+    background: #18243a;
+    border: 1px dashed rgba(255, 255, 255, 0.18);
+    border-radius: 16px;
+    padding: 28px;
+    text-align: center;
+    margin-top: 22px;
+}
+
+.estado-vazio h3 {
+    margin: 0 0 8px;
+}
+
+.estado-vazio p {
+    color: #9fb0c8;
+    margin-bottom: 18px;
+}
+
+/* =========================================================
+   RAT FINAL APROVADO
+   ========================================================= */
+
+.rat-view {
+    width: 100%;
+    overflow-x: auto;
+    padding: 10px 0 32px;
+}
+
+.rat-print {
+    position: relative !important;
+    width: 210mm !important;
+    height: 297mm !important;
+    min-height: 297mm !important;
+    margin: 0 auto !important;
+    padding: 0 !important;
+    background: #ffffff !important;
+    color: #000000 !important;
+    overflow: hidden !important;
+}
+
+.rat-fundo {
+    position: absolute !important;
+    inset: 0 !important;
+    width: 210mm !important;
+    height: 297mm !important;
+    display: block !important;
+    z-index: 1 !important;
+}
+
+.rat-campo {
+    position: absolute !important;
+    z-index: 2 !important;
+    font-family: Arial, Helvetica, sans-serif !important;
+    font-size: 15px !important;
+    font-weight: 700 !important;
+    line-height: 1.15 !important;
+    color: #000000 !important;
+    overflow: hidden !important;
+    white-space: pre-wrap !important;
+}
+
+/* Dados superiores */
+
+.rat-cliente {
+    top: 62.5mm !important;
+    left: 20mm !important;
+    width: 120mm !important;
+}
+
+.rat-hora-inicio {
+    top: 62mm !important;
+    left: 178.5mm !important;
+    width: 20mm !important;
+    text-align: center !important;
+    font-size: 15px !important;
+}
+
+.rat-responsavel {
+    top: 71.5mm !important;
+    left: 32mm !important;
+    width: 66mm !important;
+}
+
+.rat-telefone {
+    top: 72mm !important;
+    left: 103mm !important;
+    width: 55mm !important;
+}
+
+.rat-hora-fim {
+    top: 71mm !important;
+    left: 178.5mm !important;
+    width: 20mm !important;
+    text-align: center !important;
+    font-size: 15px !important;
+}
+
+.rat-endereco {
+    top: 81mm !important;
+    left: 16mm !important;
+    width: 145mm !important;
+}
+
+.rat-data {
+    top: 81mm !important;
+    left: 175mm !important;
+    width: 34mm !important;
+    text-align: center !important;
+    font-size: 13px !important;
+}
+
+.rat-cidade {
+    top: 90mm !important;
+    left: 21mm !important;
+    width: 50mm !important;
+    font-size: 13px !important;
+}
+
+.rat-bairro {
+    top: 90mm !important;
+    left: 86mm !important;
+    width: 50mm !important;
+    font-size: 13px !important;
+}
+
+.rat-cep {
+    top: 91mm !important;
+    left: 148mm !important;
+    width: 35mm !important;
+    font-size: 13px !important;
+}
+
+.rat-uf {
+    top: 90mm !important;
+    left: 195mm !important;
+    width: 11mm !important;
+    text-align: center !important;
+    font-size: 13px !important;
+}
+
+/* Equipamento */
+
+.rat-modelo {
+    top: 111mm !important;
+    left: 82mm !important;
+    width: 40mm !important;
+    font-size: 13px !important;
+}
+
+.rat-serie {
+    top: 111mm !important;
+    left: 126mm !important;
+    width: 45mm !important;
+    font-size: 13px !important;
+}
+
+.rat-contador {
+    top: 112mm !important;
+    left: 178mm !important;
+    width: 28mm !important;
+    text-align: center !important;
+    font-size: 13px !important;
+}
+
+/* Serviços */
+
+.rat-motivo {
+    top: 132.5mm !important;
+    left: 19mm !important;
+    width: 145mm !important;
+    height: 7mm !important;
+    font-size: 12.5px !important;
+    line-height: 1.15 !important;
+}
+
+.rat-diagnostico {
+    top: 143mm !important;
+    left: -5mm !important;
+    width: 180mm !important;
+    height: 18mm !important;
+    font-size: 15px !important;
+    line-height: 1.25 !important;
+    font-weight: 700 !important;
+}
+
+.rat-servico-executado {
+    top: 155mm !important;
+    left: 6mm !important;
+    width: 157.9mm !important;
+    height: 34mm !important;
+    font-size: 13px !important;
+    line-height: 1.25 !important;
+    font-weight: 700 !important;
+}
+
+.rat-pecas {
+    top: 202mm !important;
+    left: 31mm !important;
+    width: 122mm !important;
+    height: 26mm !important;
+    font-size: 12px !important;
+    line-height: 1.25 !important;
+    font-weight: 700 !important;
+}
+
+/* Técnico / assinatura */
+
+.rat-tecnico {
+    display: block !important;
+    top: 282mm !important;
+    left: 142mm !important;
+    width: 55mm !important;
+    text-align: center !important;
+    font-weight: 700 !important;
+    font-size: 12px !important;
+    color: #000000 !important;
+}
+
+/* Botões da página do RAT */
+
+.rat-acoes {
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    gap: 12px !important;
+    flex-wrap: wrap !important;
+    margin: 22px auto 0 !important;
+}
+
+.rat-acoes button,
+.rat-acoes a {
+    margin: 0 !important;
+}
+
+/* =========================================================
+   RESPONSIVO
+   ========================================================= */
+
+@media (max-width: 900px) {
+    .resumo-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .cabecalho-painel {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}
+
+@media (max-width: 760px) {
+    .topo {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .grid {
+        grid-template-columns: 1fr;
+    }
+
+    .busca {
+        flex-direction: column;
+    }
+
+    .item-relatorio,
+    .item-relatorio-pro {
+        flex-direction: column;
+        align-items: flex-start !important;
+        gap: 20px;
+    }
+
+    .detalhes-relatorio {
+        grid-template-columns: 1fr;
+    }
+
+    .acoes-card,
+    .acoes-card form,
+    .item-relatorio-pro .acoes-card {
+        width: 100% !important;
+        justify-content: flex-start;
+    }
+
+    .item-relatorio-pro .acoes-card a,
+    .item-relatorio-pro .acoes-card button,
+    .item-relatorio-pro .acoes-card form {
+        width: 100% !important;
+    }
+
+    .form-section {
+        padding: 16px;
+    }
+
+    .form-actions {
+        justify-content: stretch;
+    }
+
+    .form-actions button {
+        width: 100%;
+    }
+
+    .rat-view {
+        padding: 0 0 28px;
+    }
+
+    .rat-acoes {
+        width: 100%;
+        flex-direction: column;
+        align-items: stretch !important;
+    }
+
+    .rat-acoes button,
+    .rat-acoes a {
+        width: 100%;
+        text-align: center;
+    }
+}
+
+@media (max-width: 520px) {
+    .resumo-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* =========================================================
+   IMPRESSÃO / PDF DO RAT
+   ========================================================= */
+
+@media print {
+    @page {
+        size: A4 portrait;
+        margin: 0;
+    }
+
+    html,
+    body {
+        width: 210mm !important;
+        height: 297mm !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        background: #ffffff !important;
+        overflow: hidden !important;
+    }
+
+    .topo,
+    header,
+    nav,
+    .acoes,
+    .rat-acoes,
+    .rat-acoes *,
+    button {
+        display: none !important;
+        visibility: hidden !important;
+    }
+
+    .container {
+        width: 210mm !important;
+        max-width: 210mm !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+
+    .rat-view {
+        width: 210mm !important;
+        height: 297mm !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        overflow: visible !important;
+    }
+
+    .rat-print {
+        width: 210mm !important;
+        height: 297mm !important;
+        min-height: 297mm !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        overflow: hidden !important;
+        page-break-after: avoid !important;
+        page-break-before: avoid !important;
+        page-break-inside: avoid !important;
+        break-inside: avoid !important;
+    }
+
+    .rat-fundo {
+        width: 210mm !important;
+        height: 297mm !important;
+    }
+
+    .rat-campo {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+    }
+}

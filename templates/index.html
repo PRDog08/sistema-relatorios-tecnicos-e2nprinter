@@ -1,0 +1,311 @@
+{% extends "base.html" %}
+
+{% block conteudo %}
+<section class="card">
+    <div class="cabecalho-painel">
+        <div>
+            <h2>Novo relatório técnico</h2>
+            <p>Preencha os dados do atendimento abaixo.</p>
+        </div>
+
+        <a class="botao-secundario" href="{{ url_for('admin') }}?token=123456">Ir para o painel</a>
+    </div>
+
+    <form action="{{ url_for('criar_relatorio') }}" method="POST" class="formulario">
+        <div class="form-section">
+            <h3>Dados do cliente</h3>
+
+            <div class="grid">
+                <label>
+                    Cliente *
+                    <input type="text" name="cliente" required>
+                </label>
+
+                <label>
+                    Responsável
+                    <input type="text" name="responsavel">
+                </label>
+
+                <label>
+                    Telefone
+                    <input
+                        type="text"
+                        name="telefone"
+                        inputmode="numeric"
+                        pattern="[0-9]*"
+                        maxlength="11"
+                        class="somente-numeros"
+                        placeholder="Somente números"
+                    >
+                </label>
+
+                <label>
+                    CEP
+                    <input
+                        type="text"
+                        name="cep"
+                        inputmode="numeric"
+                        pattern="[0-9]*"
+                        maxlength="8"
+                        class="somente-numeros"
+                        placeholder="Somente números"
+                    >
+                </label>
+            </div>
+        </div>
+
+        <div class="form-section">
+            <h3>Endereço</h3>
+
+            <div class="grid">
+                <label class="campo-largo">
+                    Endereço
+                    <input type="text" name="endereco">
+                </label>
+
+                <label>
+                    Cidade
+                    <input type="text" name="cidade">
+                </label>
+
+                <label>
+                    Bairro
+                    <input type="text" name="bairro">
+                </label>
+
+                <label>
+                    UF
+                    <input type="text" name="uf" maxlength="2" placeholder="SP">
+                </label>
+            </div>
+        </div>
+
+        <div class="form-section">
+            <h3>Equipamento</h3>
+
+            <div class="grid">
+                <label>
+                    Marca
+                    <input type="text" name="marca" value="Konica Minolta" readonly>
+                </label>
+
+                <label>
+                    Equipamento / Modelo *
+                    <select name="equipamento" required>
+                        <option value="">Selecione o modelo atendido</option>
+
+                        <optgroup label="Linha Office - A3 Coloridas">
+                            <option value="Bizhub C200">Bizhub C200</option>
+                            <option value="Bizhub C203">Bizhub C203</option>
+                            <option value="Bizhub C220">Bizhub C220</option>
+                            <option value="Bizhub C221">Bizhub C221</option>
+                            <option value="Bizhub C224">Bizhub C224</option>
+                            <option value="Bizhub C224e">Bizhub C224e</option>
+                            <option value="Bizhub C227">Bizhub C227</option>
+                            <option value="Bizhub C250">Bizhub C250</option>
+                            <option value="Bizhub C250i">Bizhub C250i</option>
+                            <option value="Bizhub C251i">Bizhub C251i</option>
+                            <option value="Bizhub C253">Bizhub C253</option>
+                            <option value="Bizhub C258">Bizhub C258</option>
+                            <option value="Bizhub C280">Bizhub C280</option>
+                            <option value="Bizhub C281">Bizhub C281</option>
+                            <option value="Bizhub C284">Bizhub C284</option>
+                            <option value="Bizhub C284e">Bizhub C284e</option>
+                            <option value="Bizhub C287">Bizhub C287</option>
+                            <option value="Bizhub C300i">Bizhub C300i</option>
+                            <option value="Bizhub C301i">Bizhub C301i</option>
+                            <option value="Bizhub C308">Bizhub C308</option>
+                            <option value="Bizhub C353">Bizhub C353</option>
+                            <option value="Bizhub C360">Bizhub C360</option>
+                            <option value="Bizhub C360i">Bizhub C360i</option>
+                            <option value="Bizhub C361i">Bizhub C361i</option>
+                            <option value="Bizhub C364">Bizhub C364</option>
+                            <option value="Bizhub C364e">Bizhub C364e</option>
+                            <option value="Bizhub C368">Bizhub C368</option>
+                            <option value="Bizhub C450i">Bizhub C450i</option>
+                            <option value="Bizhub C451i">Bizhub C451i</option>
+                            <option value="Bizhub C454">Bizhub C454</option>
+                            <option value="Bizhub C454e">Bizhub C454e</option>
+                            <option value="Bizhub C458">Bizhub C458</option>
+                            <option value="Bizhub C550i">Bizhub C550i</option>
+                            <option value="Bizhub C551i">Bizhub C551i</option>
+                            <option value="Bizhub C554">Bizhub C554</option>
+                            <option value="Bizhub C554e">Bizhub C554e</option>
+                            <option value="Bizhub C558">Bizhub C558</option>
+                            <option value="Bizhub C650i">Bizhub C650i</option>
+                            <option value="Bizhub C651i">Bizhub C651i</option>
+                            <option value="Bizhub C654">Bizhub C654</option>
+                            <option value="Bizhub C654e">Bizhub C654e</option>
+                            <option value="Bizhub C658">Bizhub C658</option>
+                            <option value="Bizhub C659">Bizhub C659</option>
+                            <option value="Bizhub C750i">Bizhub C750i</option>
+                            <option value="Bizhub C754">Bizhub C754</option>
+                            <option value="Bizhub C754e">Bizhub C754e</option>
+                            <option value="Bizhub C759">Bizhub C759</option>
+                        </optgroup>
+
+                        <optgroup label="Linha Office - A4 Coloridas">
+                            <option value="Bizhub C10">Bizhub C10</option>
+                            <option value="Bizhub C20">Bizhub C20</option>
+                            <option value="Bizhub C25">Bizhub C25</option>
+                            <option value="Bizhub C30P">Bizhub C30P</option>
+                            <option value="Bizhub C31P">Bizhub C31P</option>
+                            <option value="Bizhub C35">Bizhub C35</option>
+                            <option value="Bizhub C35P">Bizhub C35P</option>
+                            <option value="Bizhub C3100P">Bizhub C3100P</option>
+                            <option value="Bizhub C3110">Bizhub C3110</option>
+                            <option value="Bizhub C3300i">Bizhub C3300i</option>
+                            <option value="Bizhub C3320i">Bizhub C3320i</option>
+                            <option value="Bizhub C3350">Bizhub C3350</option>
+                            <option value="Bizhub C3350i">Bizhub C3350i</option>
+                            <option value="Bizhub C3351">Bizhub C3351</option>
+                            <option value="Bizhub C3850">Bizhub C3850</option>
+                            <option value="Bizhub C3850FS">Bizhub C3850FS</option>
+                            <option value="Bizhub C3851">Bizhub C3851</option>
+                            <option value="Bizhub C3851FS">Bizhub C3851FS</option>
+                            <option value="Bizhub C4000i">Bizhub C4000i</option>
+                            <option value="Bizhub C4050i">Bizhub C4050i</option>
+                            <option value="Bizhub C4051i">Bizhub C4051i</option>
+                        </optgroup>
+
+                        <optgroup label="Linha Pro - Bizhub PRO / Bizhub PRESS">
+                            <option value="Bizhub PRO C500">Bizhub PRO C500</option>
+                            <option value="Bizhub PRO C5500">Bizhub PRO C5500</option>
+                            <option value="Bizhub PRO C5501">Bizhub PRO C5501</option>
+                            <option value="Bizhub PRO C6000">Bizhub PRO C6000</option>
+                            <option value="Bizhub PRO C6000L">Bizhub PRO C6000L</option>
+                            <option value="Bizhub PRO C6500">Bizhub PRO C6500</option>
+                            <option value="Bizhub PRO C6501">Bizhub PRO C6501</option>
+                            <option value="Bizhub PRO C7000">Bizhub PRO C7000</option>
+                            <option value="Bizhub PRO C7000P">Bizhub PRO C7000P</option>
+                            <option value="Bizhub PRO C8000">Bizhub PRO C8000</option>
+                            <option value="Bizhub PRESS C6000">Bizhub PRESS C6000</option>
+                            <option value="Bizhub PRESS C7000">Bizhub PRESS C7000</option>
+                            <option value="Bizhub PRESS C7000P">Bizhub PRESS C7000P</option>
+                            <option value="Bizhub PRESS C70hc">Bizhub PRESS C70hc</option>
+                            <option value="Bizhub PRESS C71hc">Bizhub PRESS C71hc</option>
+                            <option value="Bizhub PRESS C8000">Bizhub PRESS C8000</option>
+                            <option value="Bizhub PRESS C1060">Bizhub PRESS C1060</option>
+                            <option value="Bizhub PRESS C1060L">Bizhub PRESS C1060L</option>
+                            <option value="Bizhub PRESS C1070">Bizhub PRESS C1070</option>
+                            <option value="Bizhub PRESS C1070P">Bizhub PRESS C1070P</option>
+                            <option value="Bizhub PRESS C1085">Bizhub PRESS C1085</option>
+                            <option value="Bizhub PRESS C1100">Bizhub PRESS C1100</option>
+                        </optgroup>
+
+                        <optgroup label="Linha Pro - AccurioPrint / AccurioPress">
+                            <option value="AccurioPrint C2060L">AccurioPrint C2060L</option>
+                            <option value="AccurioPrint C3070L">AccurioPrint C3070L</option>
+                            <option value="AccurioPrint C4065">AccurioPrint C4065</option>
+                            <option value="AccurioPress C2060">AccurioPress C2060</option>
+                            <option value="AccurioPress C2070">AccurioPress C2070</option>
+                            <option value="AccurioPress C2070P">AccurioPress C2070P</option>
+                            <option value="AccurioPress C3070">AccurioPress C3070</option>
+                            <option value="AccurioPress C3070P">AccurioPress C3070P</option>
+                            <option value="AccurioPress C3080">AccurioPress C3080</option>
+                            <option value="AccurioPress C3080P">AccurioPress C3080P</option>
+                            <option value="AccurioPress C4070">AccurioPress C4070</option>
+                            <option value="AccurioPress C4080">AccurioPress C4080</option>
+                            <option value="AccurioPress C5070">AccurioPress C5070</option>
+                            <option value="AccurioPress C5080">AccurioPress C5080</option>
+                            <option value="AccurioPress C6085">AccurioPress C6085</option>
+                            <option value="AccurioPress C6100">AccurioPress C6100</option>
+                            <option value="AccurioPress C7090">AccurioPress C7090</option>
+                            <option value="AccurioPress C7100">AccurioPress C7100</option>
+                            <option value="AccurioPress C10500">AccurioPress C10500</option>
+                            <option value="AccurioPress C12000">AccurioPress C12000</option>
+                            <option value="AccurioPress C12010">AccurioPress C12010</option>
+                            <option value="AccurioPress C14000">AccurioPress C14000</option>
+                            <option value="AccurioPress C14010">AccurioPress C14010</option>
+                        </optgroup>
+                    </select>
+                </label>
+
+                <label>
+                    Número de série
+                    <input type="text" name="numero_serie">
+                </label>
+
+                <label>
+                    Contador geral
+                    <input type="text" name="contador_geral">
+                </label>
+            </div>
+        </div>
+
+        <div class="form-section">
+            <h3>Atendimento técnico</h3>
+
+            <div class="grid">
+                <label>
+                    Hora inicial
+                    <input type="time" name="hora_inicio">
+                </label>
+
+                <label>
+                    Hora final
+                    <input type="time" name="hora_fim">
+                </label>
+
+                <label class="campo-largo">
+                    Defeito relatado pelo cliente *
+                    <textarea name="defeito_relatado" required></textarea>
+                </label>
+
+                <label class="campo-largo">
+                    Diagnóstico técnico *
+                    <textarea name="diagnostico" required></textarea>
+                </label>
+
+                <label class="campo-largo">
+                    Serviço executado *
+                    <textarea name="servico_executado" required></textarea>
+                </label>
+
+                <label class="campo-largo">
+                    Peças trocadas ou recomendadas
+                    <textarea name="pecas"></textarea>
+                </label>
+            </div>
+        </div>
+
+        <div class="form-section">
+            <h3>Conclusão</h3>
+
+            <div class="grid">
+                <label>
+                    Status *
+                    <select name="status" required>
+                        <option value="Concluído">Concluído</option>
+                        <option value="Pendente">Pendente</option>
+                        <option value="Aguardando peça">Aguardando peça</option>
+                        <option value="Retorno necessário">Retorno necessário</option>
+                    </select>
+                </label>
+
+                <label>
+                    Técnico *
+                    <input type="text" name="tecnico" required>
+                </label>
+
+                <label class="campo-largo">
+                    Observações finais
+                    <textarea name="observacoes"></textarea>
+                </label>
+            </div>
+        </div>
+
+        <div class="form-actions">
+            <button type="submit">Salvar relatório</button>
+        </div>
+    </form>
+</section>
+
+<script>
+    document.querySelectorAll(".somente-numeros").forEach((campo) => {
+        campo.addEventListener("input", () => {
+            campo.value = campo.value.replace(/\D/g, "");
+        });
+    });
+</script>
+{% endblock %}

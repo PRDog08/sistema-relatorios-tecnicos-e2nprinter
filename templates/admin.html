@@ -1,0 +1,103 @@
+{% extends "base.html" %}
+
+{% block conteudo %}
+<section class="card">
+    <div class="cabecalho-painel">
+        <div>
+            <h2>Painel administrativo</h2>
+            <p>Gerencie os relatórios técnicos cadastrados no sistema.</p>
+        </div>
+
+        <a class="botao-secundario" href="{{ url_for('index') }}">Novo relatório</a>
+    </div>
+
+    <div class="resumo-grid">
+        <div class="resumo-card">
+            <span>Total</span>
+            <strong>{{ total }}</strong>
+        </div>
+
+        <div class="resumo-card sucesso">
+            <span>Concluídos</span>
+            <strong>{{ concluidos }}</strong>
+        </div>
+
+        <div class="resumo-card alerta">
+            <span>Pendentes</span>
+            <strong>{{ pendentes }}</strong>
+        </div>
+
+        <div class="resumo-card peca">
+            <span>Aguardando peça</span>
+            <strong>{{ aguardando_peca }}</strong>
+        </div>
+
+        <div class="resumo-card retorno">
+            <span>Retorno necessário</span>
+            <strong>{{ retorno }}</strong>
+        </div>
+    </div>
+
+    <form method="GET" action="{{ url_for('admin') }}" class="busca">
+        <input type="hidden" name="token" value="{{ token }}">
+        <input type="text" name="busca" placeholder="Buscar por cliente, responsável, equipamento ou técnico" value="{{ busca }}">
+        <button type="submit">Buscar</button>
+    </form>
+
+    {% if relatorios %}
+        <div class="lista-relatorios">
+            {% for relatorio in relatorios %}
+                <article class="item-relatorio item-relatorio-pro">
+                    <div class="info-relatorio">
+                        <div class="linha-titulo">
+                            <h3>{{ relatorio["cliente"] }}</h3>
+
+                            {% if relatorio["status"] == "Concluído" %}
+                                <span class="status status-concluido">Concluído</span>
+                            {% elif relatorio["status"] == "Pendente" %}
+                                <span class="status status-pendente">Pendente</span>
+                            {% elif relatorio["status"] == "Aguardando peça" %}
+                                <span class="status status-peca">Aguardando peça</span>
+                            {% elif relatorio["status"] == "Retorno necessário" %}
+                                <span class="status status-retorno">Retorno necessário</span>
+                            {% else %}
+                                <span class="status">{{ relatorio["status"] }}</span>
+                            {% endif %}
+                        </div>
+
+                        <div class="detalhes-relatorio">
+                            <p><strong>Responsável:</strong> {{ relatorio["responsavel"] or "-" }}</p>
+                            <p><strong>Telefone:</strong> {{ relatorio["telefone"] or "-" }}</p>
+                            <p><strong>Equipamento:</strong> {{ relatorio["equipamento"] }}</p>
+                            <p><strong>N/S:</strong> {{ relatorio["numero_serie"] or "-" }}</p>
+                            <p><strong>Contador:</strong> {{ relatorio["contador_geral"] or "-" }}</p>
+                            <p><strong>Técnico:</strong> {{ relatorio["tecnico"] }}</p>
+                            <p><strong>Criado em:</strong> {{ relatorio["criado_em"] }}</p>
+                        </div>
+                    </div>
+
+                    <div class="acoes-card">
+                        <a class="botao-secundario" href="{{ url_for('ver_relatorio', relatorio_id=relatorio['id'], token=token) }}">
+                            Abrir RAT
+                        </a>
+
+                        <a class="botao-outline" href="{{ url_for('editar_relatorio', relatorio_id=relatorio['id'], token=token) }}">
+                            Editar
+                        </a>
+
+                        <form action="{{ url_for('excluir_relatorio', relatorio_id=relatorio['id'], token=token) }}" method="POST" onsubmit="return confirm('Tem certeza que deseja excluir este relatório? Essa ação não pode ser desfeita.');">
+                            <button type="submit" class="botao-perigo">Excluir</button>
+                        </form>
+                    </div>
+                </article>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="estado-vazio">
+            <h3>Nenhum relatório encontrado</h3>
+            <p>Crie um novo relatório ou ajuste os termos da busca.</p>
+            <a class="botao-secundario" href="{{ url_for('index') }}">Criar relatório</a>
+        </div>
+    {% endif %}
+</section>
+{% endblock %}
