@@ -1,18 +1,20 @@
-from flask import Flask, render_template, request, redirect, url_for, abort
-from dotenv import load_dotenv
-from datetime import datetime
 import os
 import re
 import sqlite3
+from datetime import datetime
+
+from dotenv import load_dotenv
+from flask import Flask, render_template, request, redirect, url_for, abort
 
 load_dotenv()
 
 app = Flask(__name__)
 
 DATABASE = "relatorios.db"
-ADMIN_TOKEN = os.getenv("ADMIN_TOKEN", "123456")
+ADMIN_TOKEN = os.getenv("ADMIN_TOKEN")
 MARCA_PADRAO = "Konica Minolta"
-
+if not ADMIN_TOKEN:
+    raise RuntimeError("ADMIN_TOKEN não configurado no .env")
 STATUS_PERMITIDOS = {
     "Concluído",
     "Pendente",
@@ -541,4 +543,8 @@ def excluir_relatorio(relatorio_id):
 criar_tabela()
 
 if __name__ == "__main__":
-    app.run(debug=True, host="0.0.0.0", port=5000)
+    app.run(
+        debug=os.getenv("FLASK_DEBUG") == "1",
+        host="0.0.0.0",
+        port=int(os.getenv("PORT", 5000))
+    )

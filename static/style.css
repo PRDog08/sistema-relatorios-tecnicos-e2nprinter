@@ -1157,3 +1157,349 @@ button {
     gap: 4px;
   }
 }
+
+/* =========================================================
+   AJUSTE FINAL MOBILE - SISTEMA RAT E2NPRINTER
+   Afeta somente tela pequena. Não mexe no PDF/impressão.
+   ========================================================= */
+
+@media screen and (max-width: 768px) {
+  * {
+    box-sizing: border-box;
+  }
+
+  html,
+  body {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
+  }
+
+  body {
+    padding: 10px;
+    font-size: 15px;
+  }
+
+  .container,
+  .page,
+  .content,
+  .admin-container,
+  .form-container,
+  main {
+    width: 100%;
+    max-width: 100%;
+    margin: 0 auto;
+    padding: 12px;
+  }
+
+  header,
+  .header,
+  .topo,
+  .navbar {
+    width: 100%;
+    text-align: center;
+    padding: 14px 10px;
+  }
+
+  header img,
+  .header img,
+  .logo,
+  .logo-e2nprinter {
+    max-width: 210px;
+    width: 80%;
+    height: auto;
+    margin: 0 auto;
+    display: block;
+  }
+
+  h1 {
+    font-size: 23px;
+    line-height: 1.2;
+    text-align: center;
+    margin-bottom: 16px;
+  }
+
+  h2 {
+    font-size: 20px;
+    line-height: 1.25;
+  }
+
+  h3 {
+    font-size: 17px;
+  }
+
+  p,
+  label,
+  span,
+  td,
+  th {
+    font-size: 15px;
+  }
+
+  form {
+    width: 100%;
+  }
+
+  .form-grid,
+  .grid,
+  .row,
+  .form-row,
+  .campos-grid,
+  .dados-grid,
+  .relatorio-grid {
+    display: grid;
+    grid-template-columns: 1fr !important;
+    gap: 12px;
+    width: 100%;
+  }
+
+  .form-group,
+  .campo,
+  .input-group {
+    width: 100%;
+  }
+
+  input,
+  select,
+  textarea {
+    width: 100%;
+    max-width: 100%;
+    min-height: 44px;
+    font-size: 16px;
+    padding: 11px 12px;
+    border-radius: 10px;
+  }
+
+  textarea {
+    min-height: 110px;
+    resize: vertical;
+  }
+
+  button,
+  .btn,
+  a.btn,
+  .button,
+  input[type="submit"] {
+    width: 100%;
+    min-height: 44px;
+    padding: 11px 14px;
+    font-size: 15px;
+    border-radius: 10px;
+    text-align: center;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin: 5px 0;
+  }
+
+  .actions,
+  .botoes,
+  .btn-group,
+  .relatorio-actions,
+  .admin-actions,
+  .card-actions,
+  .acoes {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 8px;
+    width: 100%;
+  }
+
+  .card,
+  .painel-card,
+  .summary-card,
+  .admin-card,
+  .relatorio-card,
+  .rat-card,
+  section {
+    width: 100%;
+    max-width: 100%;
+    padding: 14px;
+    border-radius: 14px;
+    margin-bottom: 14px;
+  }
+
+  .summary-grid,
+  .cards-resumo,
+  .dashboard-cards,
+  .resumo-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+
+  .summary-card,
+  .cards-resumo .card,
+  .dashboard-cards .card,
+  .resumo-grid .card {
+    min-height: 90px;
+    text-align: center;
+  }
+
+  .summary-card strong,
+  .cards-resumo strong,
+  .dashboard-cards strong,
+  .resumo-grid strong {
+    font-size: 24px;
+    display: block;
+  }
+
+  .admin-card,
+  .relatorio-card {
+    display: block;
+  }
+
+  .admin-card p,
+  .relatorio-card p,
+  .painel-card p {
+    margin: 6px 0;
+    line-height: 1.35;
+    word-break: break-word;
+  }
+
+  .admin-card strong,
+  .relatorio-card strong,
+  .painel-card strong {
+    display: inline;
+    font-weight: 700;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  .admin-table,
+  table.responsive,
+  .tabela-admin {
+    border: 0;
+  }
+
+  .admin-table thead,
+  table.responsive thead,
+  .tabela-admin thead {
+    display: none;
+  }
+
+  .admin-table tr,
+  table.responsive tr,
+  .tabela-admin tr {
+    display: block;
+    margin-bottom: 14px;
+    padding: 12px;
+    border-radius: 14px;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    background: rgba(255, 255, 255, 0.04);
+  }
+
+  .admin-table td,
+  table.responsive td,
+  .tabela-admin td {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    width: 100%;
+    padding: 8px 0;
+    border: none;
+    text-align: right;
+    word-break: break-word;
+  }
+
+  .admin-table td::before,
+  table.responsive td::before,
+  .tabela-admin td::before {
+    content: attr(data-label);
+    font-weight: 700;
+    text-align: left;
+    opacity: 0.85;
+  }
+
+  .status-select,
+  td select {
+    width: 100%;
+    margin-top: 6px;
+  }
+
+  .relatorio-container,
+  .rat-container,
+  .rat-wrapper,
+  .folha-wrapper {
+    width: 100%;
+    max-width: 100%;
+    padding: 8px;
+    overflow-x: auto;
+  }
+
+  .rat-folha,
+  .relatorio-folha,
+  .rat,
+  .folha-rat {
+    max-width: 100%;
+  }
+
+  .assinatura,
+  .assinaturas {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 18px;
+    text-align: center;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  body {
+    padding: 8px;
+  }
+
+  .container,
+  .page,
+  .content,
+  .admin-container,
+  .form-container,
+  main {
+    padding: 10px;
+  }
+
+  h1 {
+    font-size: 21px;
+  }
+
+  h2 {
+    font-size: 18px;
+  }
+
+  .summary-grid,
+  .cards-resumo,
+  .dashboard-cards,
+  .resumo-grid {
+    grid-template-columns: 1fr;
+  }
+
+  header img,
+  .header img,
+  .logo,
+  .logo-e2nprinter {
+    max-width: 190px;
+  }
+
+  input,
+  select,
+  textarea {
+    font-size: 16px;
+  }
+
+  .admin-table td,
+  table.responsive td,
+  .tabela-admin td {
+    flex-direction: column;
+    text-align: left;
+    gap: 4px;
+  }
+
+  .admin-card,
+  .relatorio-card,
+  .painel-card,
+  .card {
+    padding: 12px;
+  }
+}
