@@ -18,6 +18,8 @@
     <div class="rat-print">
         <img class="rat-fundo" src="{{ url_for('static', filename='rat-modelo.png') }}" alt="Modelo RAT E2nPrinter">
 
+        <div class="rat-campo rat-numero-rat">{{ relatorio["numero_rat"] or "-" }}</div>
+
         <div class="rat-campo rat-cliente">{{ relatorio["cliente"] or "-" }}</div>
         <div class="rat-campo rat-hora-inicio">{{ relatorio["hora_inicio"] or "-" }}</div>
 

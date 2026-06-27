@@ -13,14 +13,18 @@ app = Flask(__name__)
 DATABASE = "relatorios.db"
 ADMIN_TOKEN = os.getenv("ADMIN_TOKEN")
 MARCA_PADRAO = "Konica Minolta"
+
 if not ADMIN_TOKEN:
     raise RuntimeError("ADMIN_TOKEN não configurado no .env")
+
+
 STATUS_PERMITIDOS = {
     "Concluído",
     "Pendente",
     "Aguardando peça",
     "Retorno necessário"
 }
+
 
 MODELOS_KONICA_ATENDIDOS = {
     # Linha Office - A3 Coloridas
@@ -152,6 +156,43 @@ def conectar_banco():
     return conexao
 
 
+def tabela_existe(cursor, tabela):
+    cursor.execute(
+        "SELECT name FROM sqlite_master WHERE type='table' AND name=?",
+        (tabela,)
+    )
+    return cursor.fetchone() is not None
+
+
+def coluna_existe(cursor, tabela, coluna):
+    cursor.execute(f"PRAGMA table_info({tabela})")
+    colunas = [linha["name"] for linha in cursor.fetchall()]
+    return coluna in colunas
+
+
+def gerar_numero_rat(cursor):
+    ano_atual = datetime.now().year
+    prefixo = f"RAT-{ano_atual}-"
+
+    cursor.execute("""
+        SELECT numero_rat
+        FROM relatorios
+        WHERE numero_rat LIKE ?
+        ORDER BY numero_rat DESC
+        LIMIT 1
+    """, (f"{prefixo}%",))
+
+    ultimo = cursor.fetchone()
+
+    if ultimo and ultimo["numero_rat"]:
+        ultimo_numero = int(ultimo["numero_rat"].split("-")[-1])
+        novo_numero = ultimo_numero + 1
+    else:
+        novo_numero = 1
+
+    return f"{prefixo}{novo_numero:04d}"
+
+
 def limpar_texto(valor):
     return (valor or "").strip()
 
@@ -162,7 +203,10 @@ def somente_numeros(valor):
 
 def validar_modelo(equipamento):
     if equipamento not in MODELOS_KONICA_ATENDIDOS:
-        abort(400, description="Modelo não permitido. Selecione um equipamento Konica Minolta colorido da linha Office ou Pro.")
+        abort(
+            400,
+            description="Modelo não permitido. Selecione um equipamento Konica Minolta colorido da linha Office ou Pro."
+        )
 
 
 def validar_status(status):
@@ -253,13 +297,24 @@ def criar_tabela():
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS relatorios (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
+            numero_rat TEXT,
+            cliente_id INTEGER,
             cliente TEXT NOT NULL,
+            responsavel TEXT,
             telefone TEXT,
             endereco TEXT,
+            cidade TEXT,
+            bairro TEXT,
+            cep TEXT,
+            uf TEXT,
+            marca TEXT,
             equipamento TEXT NOT NULL,
             numero_serie TEXT,
             contador_pb TEXT,
             contador_color TEXT,
+            contador_geral TEXT,
+            hora_inicio TEXT,
+            hora_fim TEXT,
             defeito_relatado TEXT NOT NULL,
             diagnostico TEXT NOT NULL,
             servico_executado TEXT NOT NULL,
@@ -267,14 +322,16 @@ def criar_tabela():
             status TEXT NOT NULL,
             observacoes TEXT,
             tecnico TEXT NOT NULL,
+            assinatura_cliente TEXT,
+            assinatura_nome TEXT,
+            assinatura_data TEXT,
             criado_em TEXT NOT NULL
         )
     """)
 
-    cursor.execute("PRAGMA table_info(relatorios)")
-    colunas_existentes = [coluna["name"] for coluna in cursor.fetchall()]
-
-    novas_colunas = {
+    novas_colunas_relatorios = {
+        "numero_rat": "TEXT",
+        "cliente_id": "INTEGER",
         "responsavel": "TEXT",
         "cidade": "TEXT",
         "bairro": "TEXT",
@@ -283,14 +340,48 @@ def criar_tabela():
         "hora_inicio": "TEXT",
         "hora_fim": "TEXT",
         "marca": "TEXT",
-        "contador_geral": "TEXT"
+        "contador_geral": "TEXT",
+        "assinatura_cliente": "TEXT",
+        "assinatura_nome": "TEXT",
+        "assinatura_data": "TEXT",
     }
 
-    for nome_coluna, tipo_coluna in novas_colunas.items():
-        if nome_coluna not in colunas_existentes:
+    for nome_coluna, tipo_coluna in novas_colunas_relatorios.items():
+        if not coluna_existe(cursor, "relatorios", nome_coluna):
             cursor.execute(
                 f"ALTER TABLE relatorios ADD COLUMN {nome_coluna} {tipo_coluna}"
             )
+
+    cursor.execute("""
+        CREATE UNIQUE INDEX IF NOT EXISTS idx_relatorios_numero_rat
+        ON relatorios(numero_rat)
+        WHERE numero_rat IS NOT NULL
+    """)
+
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS clientes (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            nome TEXT NOT NULL,
+            telefone TEXT,
+            email TEXT,
+            endereco TEXT,
+            documento TEXT,
+            criado_em TEXT DEFAULT CURRENT_TIMESTAMP
+        )
+    """)
+
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS pecas_relatorio (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            relatorio_id INTEGER NOT NULL,
+            nome_peca TEXT NOT NULL,
+            quantidade INTEGER DEFAULT 1,
+            valor_unitario REAL DEFAULT 0,
+            observacao TEXT,
+            criado_em TEXT DEFAULT CURRENT_TIMESTAMP,
+            FOREIGN KEY (relatorio_id) REFERENCES relatorios(id)
+        )
+    """)
 
     conexao.commit()
     conexao.close()
@@ -309,8 +400,11 @@ def criar_relatorio():
     conexao = conectar_banco()
     cursor = conexao.cursor()
 
+    numero_rat = gerar_numero_rat(cursor)
+
     cursor.execute("""
         INSERT INTO relatorios (
+            numero_rat,
             cliente,
             responsavel,
             telefone,
@@ -334,8 +428,9 @@ def criar_relatorio():
             tecnico,
             criado_em
         )
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     """, (
+        numero_rat,
         dados["cliente"],
         dados["responsavel"],
         dados["telefone"],
@@ -374,20 +469,25 @@ def admin():
     if token != ADMIN_TOKEN:
         abort(403)
 
-    busca = request.args.get("busca", "")
+    busca = limpar_texto(request.args.get("busca", ""))
 
     conexao = conectar_banco()
     cursor = conexao.cursor()
 
     if busca:
         cursor.execute("""
-            SELECT * FROM relatorios
-            WHERE cliente LIKE ?
+            SELECT *
+            FROM relatorios
+            WHERE numero_rat LIKE ?
+               OR cliente LIKE ?
                OR equipamento LIKE ?
                OR tecnico LIKE ?
                OR responsavel LIKE ?
+               OR numero_serie LIKE ?
             ORDER BY id DESC
         """, (
+            f"%{busca}%",
+            f"%{busca}%",
             f"%{busca}%",
             f"%{busca}%",
             f"%{busca}%",
@@ -395,7 +495,8 @@ def admin():
         ))
     else:
         cursor.execute("""
-            SELECT * FROM relatorios
+            SELECT *
+            FROM relatorios
             ORDER BY id DESC
         """)
 

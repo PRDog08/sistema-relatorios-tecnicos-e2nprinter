@@ -1503,3 +1503,13 @@ button {
     padding: 12px;
   }
 }
+
+.rat-numero-rat {
+    top: 94px;
+    right: 105px;
+    font-size: 15px;
+    font-weight: 800;
+    color: #000;
+    text-align: right;
+    min-width: 140px;
+}
