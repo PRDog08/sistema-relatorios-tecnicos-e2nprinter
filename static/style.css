@@ -1,4 +1,41 @@
 /* =========================================================
+   TEMA DARK DASHBOARD - SISTEMA DE RELATÓRIOS E2NPRINTER
+   Paleta inspirada em dashboard escuro: grafite + laranja
+   ========================================================= */
+
+:root {
+    --bg: #15191c;
+    --bg-deep: #101316;
+    --panel: #1f2529;
+    --panel-soft: #252c31;
+    --field: #171d20;
+
+    --text: #f4f7f9;
+    --muted: #9ba7af;
+
+    --accent: #ff7a1a;
+    --accent-hover: #ff9138;
+    --accent-soft: rgba(255, 122, 26, 0.16);
+    --accent-border: rgba(255, 122, 26, 0.45);
+
+    --danger: #e85045;
+    --danger-soft: rgba(232, 80, 69, 0.16);
+    --danger-border: rgba(232, 80, 69, 0.45);
+
+    --warning: #f2c811;
+    --warning-soft: rgba(242, 200, 17, 0.16);
+    --warning-border: rgba(242, 200, 17, 0.45);
+
+    --info: #60a5fa;
+    --info-soft: rgba(96, 165, 250, 0.16);
+    --info-border: rgba(96, 165, 250, 0.45);
+
+    --border: rgba(255, 255, 255, 0.09);
+    --border-strong: rgba(255, 255, 255, 0.16);
+    --shadow: rgba(0, 0, 0, 0.42);
+}
+
+/* =========================================================
    BASE GERAL
    ========================================================= */
 
@@ -6,11 +43,18 @@
     box-sizing: border-box;
 }
 
+html {
+    min-height: 100%;
+}
+
 body {
     margin: 0;
+    min-height: 100vh;
     font-family: Arial, Helvetica, sans-serif;
-    background: #0b1220;
-    color: #edf4ff;
+    background:
+        radial-gradient(circle at top left, rgba(255, 122, 26, 0.08), transparent 32%),
+        linear-gradient(180deg, var(--bg-deep), var(--bg));
+    color: var(--text);
 }
 
 a {
@@ -18,13 +62,14 @@ a {
 }
 
 .topo {
-    background: #121c2e;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(31, 37, 41, 0.96);
+    border-bottom: 1px solid var(--border);
     padding: 18px 28px;
     display: flex;
     justify-content: space-between;
     align-items: center;
     gap: 16px;
+    box-shadow: 0 14px 32px rgba(0, 0, 0, 0.24);
 }
 
 .topo-marca {
@@ -44,13 +89,14 @@ a {
 .topo-marca p,
 .topo p {
     margin: 0;
-    color: #9fb0c8;
+    color: var(--muted);
     font-size: 14px;
 }
 
 .topo h1 {
     margin: 0;
     font-size: 24px;
+    color: var(--text);
 }
 
 .topo nav {
@@ -60,9 +106,13 @@ a {
 }
 
 .topo a {
-    color: #46d39a;
+    color: var(--accent);
     text-decoration: none;
     font-weight: bold;
+}
+
+.topo a:hover {
+    color: var(--accent-hover);
 }
 
 .container {
@@ -71,19 +121,20 @@ a {
 }
 
 .card {
-    background: #121c2e;
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: linear-gradient(180deg, var(--panel), #1b2024);
+    border: 1px solid var(--border);
     border-radius: 18px;
     padding: 26px;
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25);
+    box-shadow: 0 20px 60px var(--shadow);
 }
 
 .card h2 {
     margin-top: 0;
+    color: var(--text);
 }
 
 .card p {
-    color: #9fb0c8;
+    color: var(--muted);
 }
 
 /* =========================================================
@@ -95,8 +146,8 @@ a {
 }
 
 .form-section {
-    background: #18243a;
-    border: 1px solid rgba(255, 255, 255, 0.10);
+    background: var(--panel-soft);
+    border: 1px solid var(--border);
     border-radius: 16px;
     padding: 20px;
     margin-bottom: 20px;
@@ -104,7 +155,7 @@ a {
 
 .form-section h3 {
     margin: 0 0 18px;
-    color: #edf4ff;
+    color: var(--text);
     font-size: 18px;
 }
 
@@ -118,7 +169,7 @@ label {
     display: flex;
     flex-direction: column;
     gap: 8px;
-    color: #dce8f8;
+    color: #dfe6eb;
     font-weight: bold;
 }
 
@@ -128,10 +179,23 @@ select {
     width: 100%;
     padding: 12px 14px;
     border-radius: 12px;
-    border: 1px solid rgba(255, 255, 255, 0.14);
-    background: #0b1220;
-    color: #edf4ff;
+    border: 1px solid var(--border-strong);
+    background: var(--field);
+    color: var(--text);
     font-size: 15px;
+}
+
+input::placeholder,
+textarea::placeholder {
+    color: rgba(244, 247, 249, 0.45);
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px var(--accent-soft);
+    outline: none;
 }
 
 textarea {
@@ -160,24 +224,34 @@ textarea {
 button,
 .botao-secundario,
 .acoes a {
-    border: 0;
-    background: #46d39a;
-    color: #06110d;
+    border: 1px solid var(--accent-border);
+    background: linear-gradient(135deg, var(--accent), var(--accent-hover));
+    color: #ffffff;
     padding: 12px 18px;
     border-radius: 12px;
     font-weight: bold;
     cursor: pointer;
     text-decoration: none;
     display: inline-block;
+    box-shadow: 0 12px 24px rgba(255, 122, 26, 0.18);
+    transition: transform 0.15s ease, filter 0.15s ease, box-shadow 0.15s ease;
 }
 
 button {
     margin-top: 22px;
 }
 
+button:hover,
+.botao-secundario:hover,
+.acoes a:hover {
+    filter: brightness(1.06);
+    transform: translateY(-1px);
+    box-shadow: 0 16px 30px rgba(255, 122, 26, 0.24);
+}
+
 .botao-outline {
-    border: 1px solid rgba(70, 211, 154, 0.45);
-    color: #46d39a;
+    border: 1px solid var(--accent-border);
+    color: var(--accent);
     background: transparent;
     padding: 12px 18px;
     border-radius: 12px;
@@ -186,19 +260,28 @@ button {
     display: inline-block;
 }
 
+.botao-outline:hover {
+    background: var(--accent-soft);
+    color: var(--accent-hover);
+}
+
 .botao-perigo {
-    background: rgba(255, 124, 124, 0.16);
-    color: #ff7c7c;
-    border: 1px solid rgba(255, 124, 124, 0.45);
+    background: var(--danger-soft);
+    color: #ff9a94;
+    border: 1px solid var(--danger-border);
     padding: 12px 18px;
     border-radius: 12px;
     font-weight: bold;
     cursor: pointer;
     margin: 0;
+    box-shadow: none;
 }
 
 .botao-perigo:hover {
-    background: rgba(255, 124, 124, 0.25);
+    background: rgba(232, 80, 69, 0.24);
+    filter: none;
+    transform: translateY(-1px);
+    box-shadow: none;
 }
 
 .acoes {
@@ -227,37 +310,39 @@ button {
 }
 
 .resumo-card {
-    background: #18243a;
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: var(--panel-soft);
+    border: 1px solid var(--border);
     border-radius: 16px;
     padding: 18px;
+    box-shadow: 0 14px 32px rgba(0, 0, 0, 0.22);
 }
 
 .resumo-card span {
     display: block;
-    color: #9fb0c8;
+    color: var(--muted);
     font-size: 14px;
     margin-bottom: 8px;
 }
 
 .resumo-card strong {
     font-size: 30px;
+    color: var(--text);
 }
 
 .resumo-card.sucesso {
-    border-color: rgba(70, 211, 154, 0.45);
+    border-color: var(--accent-border);
 }
 
 .resumo-card.alerta {
-    border-color: rgba(255, 203, 107, 0.45);
+    border-color: var(--warning-border);
 }
 
 .resumo-card.peca {
-    border-color: rgba(96, 165, 250, 0.45);
+    border-color: var(--info-border);
 }
 
 .resumo-card.retorno {
-    border-color: rgba(255, 124, 124, 0.45);
+    border-color: var(--danger-border);
 }
 
 .busca {
@@ -280,8 +365,8 @@ button {
 }
 
 .item-relatorio {
-    background: #18243a;
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: var(--panel-soft);
+    border: 1px solid var(--border);
     border-radius: 16px;
     padding: 18px;
     display: flex;
@@ -292,6 +377,7 @@ button {
 
 .item-relatorio h3 {
     margin: 0 0 10px;
+    color: var(--text);
 }
 
 .item-relatorio p {
@@ -323,11 +409,11 @@ button {
 
 .detalhes-relatorio p {
     margin: 0;
-    color: #9fb0c8;
+    color: var(--muted);
 }
 
 .detalhes-relatorio strong {
-    color: #edf4ff;
+    color: var(--text);
 }
 
 .status {
@@ -337,27 +423,27 @@ button {
     font-size: 13px;
     font-weight: bold;
     background: rgba(255, 255, 255, 0.08);
-    color: #edf4ff;
+    color: var(--text);
 }
 
 .status-concluido {
-    background: rgba(70, 211, 154, 0.16);
-    color: #46d39a;
+    background: var(--accent-soft);
+    color: var(--accent-hover);
 }
 
 .status-pendente {
-    background: rgba(255, 203, 107, 0.16);
-    color: #ffcb6b;
+    background: var(--warning-soft);
+    color: #ffd95a;
 }
 
 .status-peca {
-    background: rgba(96, 165, 250, 0.16);
-    color: #60a5fa;
+    background: var(--info-soft);
+    color: var(--info);
 }
 
 .status-retorno {
-    background: rgba(255, 124, 124, 0.16);
-    color: #ff7c7c;
+    background: var(--danger-soft);
+    color: #ff9a94;
 }
 
 .acoes-card {
@@ -392,7 +478,7 @@ button {
 }
 
 .estado-vazio {
-    background: #18243a;
+    background: var(--panel-soft);
     border: 1px dashed rgba(255, 255, 255, 0.18);
     border-radius: 16px;
     padding: 28px;
@@ -402,10 +488,11 @@ button {
 
 .estado-vazio h3 {
     margin: 0 0 8px;
+    color: var(--text);
 }
 
 .estado-vazio p {
-    color: #9fb0c8;
+    color: var(--muted);
     margin-bottom: 18px;
 }
 
@@ -609,6 +696,16 @@ button {
     color: #000000 !important;
 }
 
+.rat-numero-rat {
+    top: 94px;
+    right: 105px;
+    font-size: 15px;
+    font-weight: 800;
+    color: #000000;
+    text-align: right;
+    min-width: 140px;
+}
+
 /* Botões da página do RAT */
 
 .rat-acoes {
@@ -629,7 +726,7 @@ button {
    RESPONSIVO
    ========================================================= */
 
-@media (max-width: 900px) {
+@media screen and (max-width: 900px) {
     .resumo-grid {
         grid-template-columns: repeat(2, 1fr);
     }
@@ -640,23 +737,230 @@ button {
     }
 }
 
-@media (max-width: 760px) {
-    .topo {
-        flex-direction: column;
-        align-items: flex-start;
+@media screen and (max-width: 760px) {
+    body {
+        padding: 10px;
+        font-size: 15px;
     }
 
-    .grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 14px;
+    html,
+    body {
+        width: 100%;
+        max-width: 100%;
+        overflow-x: hidden;
+    }
+
+    .container,
+    .page,
+    .content,
+    .admin-container,
+    .form-container,
+    main {
+        width: 100%;
+        max-width: 100%;
+        margin: 0 auto;
+        padding: 12px;
+    }
+
+    .topo,
+    header,
+    .header,
+    .navbar {
+        width: 100%;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        padding: 14px 10px;
+    }
+
+    .topo-marca {
+        align-items: center;
+    }
+
+    .topo nav {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .topo-logo,
+    header img,
+    .header img,
+    .logo,
+    .logo-e2nprinter {
+        max-width: 210px;
+        width: 80%;
+        height: auto;
+        margin: 0 auto;
+        display: block;
+    }
+
+    h1 {
+        font-size: 23px;
+        line-height: 1.2;
+        text-align: center;
+        margin-bottom: 16px;
+    }
+
+    h2 {
+        font-size: 20px;
+        line-height: 1.25;
+    }
+
+    h3 {
+        font-size: 17px;
+    }
+
+    p,
+    label,
+    span,
+    td,
+    th {
+        font-size: 15px;
+    }
+
+    form {
+        width: 100%;
+    }
+
+    .form-grid,
+    .grid,
+    .row,
+    .form-row,
+    .campos-grid,
+    .dados-grid,
+    .relatorio-grid {
+        display: grid;
+        grid-template-columns: 1fr !important;
+        gap: 12px;
+        width: 100%;
     }
 
     .campo-largo {
         grid-column: 1 / -1;
     }
 
+    label,
+    .form-group,
+    .campo,
+    .input-group {
+        width: 100%;
+        min-width: 0;
+    }
+
+    input,
+    select,
+    textarea {
+        width: 100%;
+        max-width: 100%;
+        min-width: 0;
+        min-height: 44px;
+        font-size: 16px;
+        padding: 11px 12px;
+        border-radius: 10px;
+    }
+
+    select {
+        white-space: normal;
+    }
+
+    textarea {
+        min-height: 110px;
+        resize: vertical;
+    }
+
+    button,
+    .btn,
+    a.btn,
+    .button,
+    input[type="submit"] {
+        width: 100%;
+        min-height: 44px;
+        padding: 11px 14px;
+        font-size: 15px;
+        border-radius: 10px;
+        text-align: center;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        margin: 5px 0;
+    }
+
+    .form-actions {
+        justify-content: stretch;
+    }
+
+    .form-actions button {
+        width: 100%;
+    }
+
     .busca {
         flex-direction: column;
+    }
+
+    .actions,
+    .botoes,
+    .btn-group,
+    .relatorio-actions,
+    .admin-actions,
+    .card-actions,
+    .acoes {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 8px;
+        width: 100%;
+    }
+
+    .card,
+    .painel-card,
+    .summary-card,
+    .admin-card,
+    .relatorio-card,
+    .rat-card,
+    section {
+        width: 100%;
+        max-width: 100%;
+        padding: 14px;
+        border-radius: 14px;
+        margin-bottom: 14px;
+    }
+
+    .form-section {
+        padding: 18px;
+        border-radius: 16px;
+    }
+
+    .cabecalho-painel {
+        gap: 18px;
+    }
+
+    .cabecalho-painel .botao-secundario {
+        width: 100%;
+        text-align: center;
+    }
+
+    .summary-grid,
+    .cards-resumo,
+    .dashboard-cards,
+    .resumo-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+    }
+
+    .summary-card,
+    .cards-resumo .card,
+    .dashboard-cards .card,
+    .resumo-card {
+        min-height: 90px;
+        text-align: center;
+    }
+
+    .summary-card strong,
+    .cards-resumo strong,
+    .dashboard-cards strong,
+    .resumo-card strong {
+        font-size: 24px;
+        display: block;
     }
 
     .item-relatorio,
@@ -668,6 +972,26 @@ button {
 
     .detalhes-relatorio {
         grid-template-columns: 1fr;
+    }
+
+    .admin-card,
+    .relatorio-card {
+        display: block;
+    }
+
+    .admin-card p,
+    .relatorio-card p,
+    .painel-card p {
+        margin: 6px 0;
+        line-height: 1.35;
+        word-break: break-word;
+    }
+
+    .admin-card strong,
+    .relatorio-card strong,
+    .painel-card strong {
+        display: inline;
+        font-weight: 700;
     }
 
     .acoes-card,
@@ -683,20 +1007,81 @@ button {
         width: 100% !important;
     }
 
-    .form-section {
-        padding: 16px;
-    }
-
-    .form-actions {
-        justify-content: stretch;
-    }
-
-    .form-actions button {
+    table {
         width: 100%;
+        border-collapse: collapse;
+    }
+
+    .admin-table,
+    table.responsive,
+    .tabela-admin {
+        border: 0;
+    }
+
+    .admin-table thead,
+    table.responsive thead,
+    .tabela-admin thead {
+        display: none;
+    }
+
+    .admin-table tr,
+    table.responsive tr,
+    .tabela-admin tr {
+        display: block;
+        margin-bottom: 14px;
+        padding: 12px;
+        border-radius: 14px;
+        border: 1px solid var(--border);
+        background: rgba(255, 255, 255, 0.04);
+    }
+
+    .admin-table td,
+    table.responsive td,
+    .tabela-admin td {
+        display: flex;
+        justify-content: space-between;
+        gap: 12px;
+        width: 100%;
+        padding: 8px 0;
+        border: none;
+        text-align: right;
+        word-break: break-word;
+    }
+
+    .admin-table td::before,
+    table.responsive td::before,
+    .tabela-admin td::before {
+        content: attr(data-label);
+        font-weight: 700;
+        text-align: left;
+        opacity: 0.85;
+    }
+
+    .status-select,
+    td select {
+        width: 100%;
+        margin-top: 6px;
     }
 
     .rat-view {
         padding: 0 0 28px;
+    }
+
+    .relatorio-container,
+    .rat-container,
+    .rat-wrapper,
+    .folha-wrapper {
+        width: 100%;
+        max-width: 100%;
+        padding: 8px;
+        overflow-x: auto;
+    }
+
+    .rat-folha,
+    .relatorio-folha,
+    .rat,
+    .folha-rat {
+        max-width: 100%;
     }
 
     .rat-acoes {
@@ -710,11 +1095,73 @@ button {
         width: 100%;
         text-align: center;
     }
+
+    .assinatura,
+    .assinaturas {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 18px;
+        text-align: center;
+    }
 }
 
-@media (max-width: 520px) {
-    .resumo-grid {
+@media screen and (max-width: 520px) {
+    .resumo-grid,
+    .summary-grid,
+    .cards-resumo,
+    .dashboard-cards {
         grid-template-columns: 1fr;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    body {
+        padding: 8px;
+    }
+
+    .container,
+    .page,
+    .content,
+    .admin-container,
+    .form-container,
+    main {
+        padding: 10px;
+    }
+
+    h1 {
+        font-size: 21px;
+    }
+
+    h2 {
+        font-size: 18px;
+    }
+
+    header img,
+    .header img,
+    .logo,
+    .logo-e2nprinter {
+        max-width: 190px;
+    }
+
+    input,
+    select,
+    textarea {
+        font-size: 16px;
+    }
+
+    .admin-table td,
+    table.responsive td,
+    .tabela-admin td {
+        flex-direction: column;
+        text-align: left;
+        gap: 4px;
+    }
+
+    .admin-card,
+    .relatorio-card,
+    .painel-card,
+    .card {
+        padding: 12px;
     }
 }
 
@@ -786,730 +1233,4 @@ button {
         -webkit-print-color-adjust: exact !important;
         print-color-adjust: exact !important;
     }
-}
-
-/* =========================================================
-   AJUSTE FINAL MOBILE - FORMULÁRIO
-   ========================================================= */
-
-@media (max-width: 760px) {
-    .container {
-        width: 94%;
-        margin: 24px auto;
-    }
-
-    .card {
-        padding: 22px 18px;
-        border-radius: 18px;
-    }
-
-    .cabecalho-painel {
-        gap: 18px;
-    }
-
-    .cabecalho-painel .botao-secundario {
-        width: 100%;
-        text-align: center;
-    }
-
-    .form-section {
-        padding: 18px;
-        border-radius: 16px;
-    }
-
-    .grid {
-        grid-template-columns: 1fr !important;
-        gap: 16px;
-    }
-
-    .campo-largo {
-        grid-column: 1 / -1;
-    }
-
-    label {
-        width: 100%;
-        min-width: 0;
-    }
-
-    input,
-    textarea,
-    select {
-        width: 100%;
-        min-width: 0;
-        max-width: 100%;
-        font-size: 16px;
-    }
-
-    select {
-        white-space: normal;
-    }
-
-    .form-actions {
-        justify-content: stretch;
-    }
-
-    .form-actions button {
-        width: 100%;
-    }
-}
-
-/* =========================================================
-   AJUSTE FINAL MOBILE - E2nPrinter
-   Só afeta tela pequena. Não interfere no PDF/impressão.
-   ========================================================= */
-
-@media screen and (max-width: 768px) {
-  * {
-    box-sizing: border-box;
-  }
-
-  html,
-  body {
-    width: 100%;
-    max-width: 100%;
-    overflow-x: hidden;
-  }
-
-  body {
-    padding: 12px;
-    font-size: 15px;
-  }
-
-  .container,
-  .page,
-  .content,
-  .admin-container,
-  .form-container,
-  main {
-    width: 100%;
-    max-width: 100%;
-    margin: 0 auto;
-    padding: 14px;
-  }
-
-  header,
-  .header,
-  .topo,
-  .navbar {
-    width: 100%;
-    text-align: center;
-    padding: 14px 10px;
-  }
-
-  header img,
-  .header img,
-  .logo,
-  .logo-e2nprinter {
-    max-width: 220px;
-    width: 80%;
-    height: auto;
-    margin: 0 auto;
-    display: block;
-  }
-
-  h1 {
-    font-size: 24px;
-    line-height: 1.2;
-    text-align: center;
-  }
-
-  h2 {
-    font-size: 20px;
-    line-height: 1.25;
-  }
-
-  h3 {
-    font-size: 17px;
-  }
-
-  p,
-  label,
-  span,
-  td,
-  th {
-    font-size: 15px;
-  }
-
-  form {
-    width: 100%;
-  }
-
-  .form-grid,
-  .grid,
-  .row,
-  .form-row,
-  .campos-grid {
-    display: grid;
-    grid-template-columns: 1fr !important;
-    gap: 12px;
-    width: 100%;
-  }
-
-  .form-group,
-  .campo,
-  .input-group {
-    width: 100%;
-  }
-
-  input,
-  select,
-  textarea {
-    width: 100%;
-    max-width: 100%;
-    min-height: 44px;
-    font-size: 16px;
-    padding: 11px 12px;
-    border-radius: 10px;
-  }
-
-  textarea {
-    min-height: 110px;
-    resize: vertical;
-  }
-
-  button,
-  .btn,
-  a.btn,
-  .button,
-  input[type="submit"] {
-    width: 100%;
-    min-height: 44px;
-    padding: 11px 14px;
-    font-size: 15px;
-    border-radius: 10px;
-    text-align: center;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    margin: 5px 0;
-  }
-
-  .actions,
-  .botoes,
-  .btn-group,
-  .relatorio-actions,
-  .admin-actions,
-  .card-actions {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 8px;
-    width: 100%;
-  }
-
-  .card,
-  .painel-card,
-  .summary-card,
-  .admin-card,
-  .relatorio-card,
-  section {
-    width: 100%;
-    padding: 14px;
-    border-radius: 14px;
-    margin-bottom: 14px;
-  }
-
-  .summary-grid,
-  .cards-resumo,
-  .dashboard-cards {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 10px;
-  }
-
-  .summary-card,
-  .cards-resumo .card {
-    min-height: 90px;
-    text-align: center;
-  }
-
-  .summary-card strong,
-  .cards-resumo strong {
-    font-size: 24px;
-    display: block;
-  }
-
-  table {
-    width: 100%;
-    border-collapse: collapse;
-  }
-
-  .admin-table,
-  table.responsive,
-  .tabela-admin {
-    border: 0;
-  }
-
-  .admin-table thead,
-  table.responsive thead,
-  .tabela-admin thead {
-    display: none;
-  }
-
-  .admin-table tr,
-  table.responsive tr,
-  .tabela-admin tr {
-    display: block;
-    margin-bottom: 14px;
-    padding: 12px;
-    border-radius: 14px;
-    border: 1px solid rgba(255, 255, 255, 0.12);
-    background: rgba(255, 255, 255, 0.04);
-  }
-
-  .admin-table td,
-  table.responsive td,
-  .tabela-admin td {
-    display: flex;
-    justify-content: space-between;
-    gap: 12px;
-    width: 100%;
-    padding: 8px 0;
-    border: none;
-    text-align: right;
-    word-break: break-word;
-  }
-
-  .admin-table td::before,
-  table.responsive td::before,
-  .tabela-admin td::before {
-    content: attr(data-label);
-    font-weight: 700;
-    text-align: left;
-    opacity: 0.85;
-  }
-
-  .status-select,
-  td select {
-    width: 100%;
-    margin-top: 6px;
-  }
-
-  .relatorio-container,
-  .rat-container,
-  .rat-wrapper {
-    width: 100%;
-    max-width: 100%;
-    padding: 10px;
-    overflow-x: auto;
-  }
-
-  .rat-folha,
-  .relatorio-folha,
-  .rat {
-    transform-origin: top left;
-  }
-
-  .assinatura,
-  .assinaturas {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 18px;
-    text-align: center;
-  }
-}
-
-@media screen and (max-width: 480px) {
-  body {
-    padding: 8px;
-  }
-
-  .container,
-  .page,
-  .content,
-  .admin-container,
-  .form-container,
-  main {
-    padding: 10px;
-  }
-
-  h1 {
-    font-size: 21px;
-  }
-
-  h2 {
-    font-size: 18px;
-  }
-
-  .summary-grid,
-  .cards-resumo,
-  .dashboard-cards {
-    grid-template-columns: 1fr;
-  }
-
-  header img,
-  .header img,
-  .logo,
-  .logo-e2nprinter {
-    max-width: 190px;
-  }
-
-  input,
-  select,
-  textarea {
-    font-size: 16px;
-  }
-
-  .admin-table td,
-  table.responsive td,
-  .tabela-admin td {
-    flex-direction: column;
-    text-align: left;
-    gap: 4px;
-  }
-}
-
-/* =========================================================
-   AJUSTE FINAL MOBILE - SISTEMA RAT E2NPRINTER
-   Afeta somente tela pequena. Não mexe no PDF/impressão.
-   ========================================================= */
-
-@media screen and (max-width: 768px) {
-  * {
-    box-sizing: border-box;
-  }
-
-  html,
-  body {
-    width: 100%;
-    max-width: 100%;
-    overflow-x: hidden;
-  }
-
-  body {
-    padding: 10px;
-    font-size: 15px;
-  }
-
-  .container,
-  .page,
-  .content,
-  .admin-container,
-  .form-container,
-  main {
-    width: 100%;
-    max-width: 100%;
-    margin: 0 auto;
-    padding: 12px;
-  }
-
-  header,
-  .header,
-  .topo,
-  .navbar {
-    width: 100%;
-    text-align: center;
-    padding: 14px 10px;
-  }
-
-  header img,
-  .header img,
-  .logo,
-  .logo-e2nprinter {
-    max-width: 210px;
-    width: 80%;
-    height: auto;
-    margin: 0 auto;
-    display: block;
-  }
-
-  h1 {
-    font-size: 23px;
-    line-height: 1.2;
-    text-align: center;
-    margin-bottom: 16px;
-  }
-
-  h2 {
-    font-size: 20px;
-    line-height: 1.25;
-  }
-
-  h3 {
-    font-size: 17px;
-  }
-
-  p,
-  label,
-  span,
-  td,
-  th {
-    font-size: 15px;
-  }
-
-  form {
-    width: 100%;
-  }
-
-  .form-grid,
-  .grid,
-  .row,
-  .form-row,
-  .campos-grid,
-  .dados-grid,
-  .relatorio-grid {
-    display: grid;
-    grid-template-columns: 1fr !important;
-    gap: 12px;
-    width: 100%;
-  }
-
-  .form-group,
-  .campo,
-  .input-group {
-    width: 100%;
-  }
-
-  input,
-  select,
-  textarea {
-    width: 100%;
-    max-width: 100%;
-    min-height: 44px;
-    font-size: 16px;
-    padding: 11px 12px;
-    border-radius: 10px;
-  }
-
-  textarea {
-    min-height: 110px;
-    resize: vertical;
-  }
-
-  button,
-  .btn,
-  a.btn,
-  .button,
-  input[type="submit"] {
-    width: 100%;
-    min-height: 44px;
-    padding: 11px 14px;
-    font-size: 15px;
-    border-radius: 10px;
-    text-align: center;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    margin: 5px 0;
-  }
-
-  .actions,
-  .botoes,
-  .btn-group,
-  .relatorio-actions,
-  .admin-actions,
-  .card-actions,
-  .acoes {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 8px;
-    width: 100%;
-  }
-
-  .card,
-  .painel-card,
-  .summary-card,
-  .admin-card,
-  .relatorio-card,
-  .rat-card,
-  section {
-    width: 100%;
-    max-width: 100%;
-    padding: 14px;
-    border-radius: 14px;
-    margin-bottom: 14px;
-  }
-
-  .summary-grid,
-  .cards-resumo,
-  .dashboard-cards,
-  .resumo-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 10px;
-  }
-
-  .summary-card,
-  .cards-resumo .card,
-  .dashboard-cards .card,
-  .resumo-grid .card {
-    min-height: 90px;
-    text-align: center;
-  }
-
-  .summary-card strong,
-  .cards-resumo strong,
-  .dashboard-cards strong,
-  .resumo-grid strong {
-    font-size: 24px;
-    display: block;
-  }
-
-  .admin-card,
-  .relatorio-card {
-    display: block;
-  }
-
-  .admin-card p,
-  .relatorio-card p,
-  .painel-card p {
-    margin: 6px 0;
-    line-height: 1.35;
-    word-break: break-word;
-  }
-
-  .admin-card strong,
-  .relatorio-card strong,
-  .painel-card strong {
-    display: inline;
-    font-weight: 700;
-  }
-
-  table {
-    width: 100%;
-    border-collapse: collapse;
-  }
-
-  .admin-table,
-  table.responsive,
-  .tabela-admin {
-    border: 0;
-  }
-
-  .admin-table thead,
-  table.responsive thead,
-  .tabela-admin thead {
-    display: none;
-  }
-
-  .admin-table tr,
-  table.responsive tr,
-  .tabela-admin tr {
-    display: block;
-    margin-bottom: 14px;
-    padding: 12px;
-    border-radius: 14px;
-    border: 1px solid rgba(255, 255, 255, 0.12);
-    background: rgba(255, 255, 255, 0.04);
-  }
-
-  .admin-table td,
-  table.responsive td,
-  .tabela-admin td {
-    display: flex;
-    justify-content: space-between;
-    gap: 12px;
-    width: 100%;
-    padding: 8px 0;
-    border: none;
-    text-align: right;
-    word-break: break-word;
-  }
-
-  .admin-table td::before,
-  table.responsive td::before,
-  .tabela-admin td::before {
-    content: attr(data-label);
-    font-weight: 700;
-    text-align: left;
-    opacity: 0.85;
-  }
-
-  .status-select,
-  td select {
-    width: 100%;
-    margin-top: 6px;
-  }
-
-  .relatorio-container,
-  .rat-container,
-  .rat-wrapper,
-  .folha-wrapper {
-    width: 100%;
-    max-width: 100%;
-    padding: 8px;
-    overflow-x: auto;
-  }
-
-  .rat-folha,
-  .relatorio-folha,
-  .rat,
-  .folha-rat {
-    max-width: 100%;
-  }
-
-  .assinatura,
-  .assinaturas {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 18px;
-    text-align: center;
-  }
-}
-
-@media screen and (max-width: 480px) {
-  body {
-    padding: 8px;
-  }
-
-  .container,
-  .page,
-  .content,
-  .admin-container,
-  .form-container,
-  main {
-    padding: 10px;
-  }
-
-  h1 {
-    font-size: 21px;
-  }
-
-  h2 {
-    font-size: 18px;
-  }
-
-  .summary-grid,
-  .cards-resumo,
-  .dashboard-cards,
-  .resumo-grid {
-    grid-template-columns: 1fr;
-  }
-
-  header img,
-  .header img,
-  .logo,
-  .logo-e2nprinter {
-    max-width: 190px;
-  }
-
-  input,
-  select,
-  textarea {
-    font-size: 16px;
-  }
-
-  .admin-table td,
-  table.responsive td,
-  .tabela-admin td {
-    flex-direction: column;
-    text-align: left;
-    gap: 4px;
-  }
-
-  .admin-card,
-  .relatorio-card,
-  .painel-card,
-  .card {
-    padding: 12px;
-  }
-}
-
-.rat-numero-rat {
-    top: 94px;
-    right: 105px;
-    font-size: 15px;
-    font-weight: 800;
-    color: #000;
-    text-align: right;
-    min-width: 140px;
 }
