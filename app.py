@@ -1,4 +1,11 @@
 import os
+
+print("=" * 50)
+print("Diretório atual:", os.getcwd())
+print("Banco:", os.path.abspath(DATABASE))
+print("=" * 50)
+
+import os
 import re
 import sqlite3
 from datetime import datetime
