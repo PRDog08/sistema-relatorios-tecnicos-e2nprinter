@@ -7,18 +7,24 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-    <header class="topo">
+
+<header class="topo">
     <div class="topo-marca">
-<img class="topo-logo" src="{{ url_for('static', filename='logo-e2nprinter-white.svg') }}" alt="E2nPrinter">    </div>
+        <img class="topo-logo"
+             src="{{ url_for('static', filename='logo-e2nprinter-white.svg') }}"
+             alt="E2nPrinter">
+    </div>
 
     <nav>
-        <a href="{{ url_for('index') }}">Novo relatório</a>
-        <a href="{{ url_for('admin') }}?token={{ request.args.get('token', '123456') }}">Painel</a>
+        <a href="{{ url_for('index') }}">Início</a>
+        <a href="{{ url_for('novo_relatorio') }}">Novo relatório</a>
+        <a href="{{ url_for('logout') }}">Sair</a>
     </nav>
 </header>
 
-    <main class="container">
-        {% block conteudo %}{% endblock %}
-    </main>
+<main class="container">
+    {% block conteudo %}{% endblock %}
+</main>
+
 </body>
 </html>
