@@ -1,11 +1,4 @@
 import os
-
-print("=" * 50)
-print("Diretório atual:", os.getcwd())
-print("Banco:", os.path.abspath(DATABASE))
-print("=" * 50)
-
-import os
 import re
 import sqlite3
 from datetime import datetime
@@ -20,6 +13,45 @@ app = Flask(__name__)
 DATABASE = "relatorios.db"
 ADMIN_TOKEN = os.getenv("ADMIN_TOKEN")
 MARCA_PADRAO = "Konica Minolta"
+
+print("=" * 70)
+print("INICIALIZAÇÃO DO SISTEMA")
+print("Diretório atual:", os.getcwd())
+
+caminho_banco = os.path.abspath(DATABASE)
+print("Banco configurado:", DATABASE)
+print("Caminho absoluto:", caminho_banco)
+
+if os.path.exists(caminho_banco):
+    print("Banco encontrado: SIM")
+    print("Tamanho:", os.path.getsize(caminho_banco), "bytes")
+
+    try:
+        conn = sqlite3.connect(caminho_banco)
+        cursor = conn.cursor()
+
+        cursor.execute("""
+            SELECT name
+            FROM sqlite_master
+            WHERE type='table'
+        """)
+        tabelas = cursor.fetchall()
+        print("Tabelas:", tabelas)
+
+        if any(t[0] == "relatorios" for t in tabelas):
+            cursor.execute("SELECT COUNT(*) FROM relatorios")
+            total = cursor.fetchone()[0]
+            print("TOTAL DE RELATÓRIOS:", total)
+
+        conn.close()
+
+    except Exception as e:
+        print("ERRO AO LER O BANCO:", e)
+
+else:
+    print("Banco encontrado: NÃO")
+
+print("=" * 70)
 
 if not ADMIN_TOKEN:
     raise RuntimeError("ADMIN_TOKEN não configurado no .env")
