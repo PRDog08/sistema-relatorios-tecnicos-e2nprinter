@@ -35,7 +35,10 @@ def login():
             session["auth"] = True
             return redirect(url_for("index"))
 
-        return "Token inválido", 401
+        return render_template(
+            "login.html",
+            erro="Token de acesso inválido."
+), 401
 
     return render_template("login.html")
 

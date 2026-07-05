@@ -1,11 +1,12 @@
 from database import execute_query
 
 # =========================
-# CRIAÇÃO DA TABELA PRINCIPAL
+# CRIAÇÃO / ATUALIZAÇÃO DA TABELA
 # =========================
 
 def criar_tabelas():
-    query = """
+    # Cria a tabela caso não exista
+    execute_query("""
     CREATE TABLE IF NOT EXISTS relatorios (
         id SERIAL PRIMARY KEY,
 
@@ -34,10 +35,20 @@ def criar_tabelas():
 
         criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     );
-    """
+    """)
 
-    execute_query(query)
-    print("Tabela 'relatorios' verificada/criada com sucesso.")
+    # Atualiza bancos antigos sem perder dados
+    novas_colunas = [
+        "ALTER TABLE relatorios ADD COLUMN IF NOT EXISTS pecas TEXT;",
+        "ALTER TABLE relatorios ADD COLUMN IF NOT EXISTS status TEXT;",
+        "ALTER TABLE relatorios ADD COLUMN IF NOT EXISTS tecnico TEXT;",
+        "ALTER TABLE relatorios ADD COLUMN IF NOT EXISTS observacoes TEXT;"
+    ]
+
+    for query in novas_colunas:
+        execute_query(query)
+
+    print("Tabela 'relatorios' verificada e atualizada com sucesso.")
 
 
 if __name__ == "__main__":

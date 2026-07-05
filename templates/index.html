@@ -1,28 +1,35 @@
 {% extends "base.html" %}
 
 {% block conteudo %}
+
 <section class="card">
 
     <div class="cabecalho-painel">
+
         <div>
-            <h2>Painel de relatórios</h2>
-            <p>Gerenciamento de atendimentos técnicos</p>
+            <h2>Painel de Relatórios Técnicos</h2>
+            <p>Gerenciamento dos atendimentos da E2nPrinter</p>
         </div>
 
         <div class="acoes-topo">
-            <a class="botao-secundario" href="{{ url_for('novo_relatorio') }}">
+
+            <a class="botao-secundario"
+               href="{{ url_for('novo_relatorio') }}">
                 Novo relatório
             </a>
 
-            <a class="botao-secundario" href="{{ url_for('logout') }}">
+            <a class="botao-secundario"
+               href="{{ url_for('logout') }}">
                 Sair
             </a>
+
         </div>
+
     </div>
 
     <hr>
 
-    {% if relatorios and relatorios|length > 0 %}
+    {% if relatorios %}
 
         <div class="lista-relatorios">
 
@@ -32,14 +39,19 @@
 
                 <h3>{{ r.cliente }}</h3>
 
-                <p><strong>Modelo:</strong> {{ r.modelo }}</p>
-                <p><strong>Telefone:</strong> {{ r.telefone }}</p>
-                <p><strong>Status:</strong> {{ r.status }}</p>
+                <p><strong>Modelo:</strong> {{ r.modelo or "-" }}</p>
+
+                <p><strong>Telefone:</strong> {{ r.telefone or "-" }}</p>
+
+                <p><strong>Status:</strong> {{ r.status or "Não informado" }}</p>
+
+                <p><strong>Técnico:</strong> {{ r.tecnico or "-" }}</p>
 
                 <div class="acoes-card">
 
-                    <a href="{{ url_for('ver_relatorio', id=r.id) }}">
-                        Ver
+                    <a href="{{ url_for('ver_relatorio', id=r.id) }}"
+                       target="_blank">
+                        Abrir RAT
                     </a>
 
                     <a href="{{ url_for('editar', id=r.id) }}">
@@ -47,7 +59,7 @@
                     </a>
 
                     <a href="{{ url_for('deletar', id=r.id) }}"
-                       onclick="return confirm('Tem certeza que deseja excluir?')">
+                       onclick="return confirm('Deseja realmente excluir este relatório?')">
                         Excluir
                     </a>
 
@@ -61,9 +73,18 @@
 
     {% else %}
 
-        <p>Nenhum relatório encontrado.</p>
+        <div style="text-align:center;padding:40px 0;">
+
+            <h3>Nenhum relatório cadastrado.</h3>
+
+            <p>
+                Clique em <strong>Novo relatório</strong> para iniciar o primeiro atendimento.
+            </p>
+
+        </div>
 
     {% endif %}
 
 </section>
+
 {% endblock %}
