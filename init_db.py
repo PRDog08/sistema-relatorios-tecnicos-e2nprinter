@@ -5,50 +5,57 @@ from database import execute_query
 # =========================
 
 def criar_tabelas():
-    # Cria a tabela caso não exista
+
     execute_query("""
-    CREATE TABLE IF NOT EXISTS relatorios (
-        id SERIAL PRIMARY KEY,
+        CREATE TABLE IF NOT EXISTS relatorios (
 
-        cliente TEXT,
-        telefone TEXT,
-        responsavel TEXT,
+            id SERIAL PRIMARY KEY,
 
-        endereco TEXT,
-        cidade TEXT,
-        bairro TEXT,
-        cep TEXT,
-        uf TEXT,
+            cliente TEXT,
+            telefone TEXT,
+            responsavel TEXT,
 
-        marca TEXT,
-        modelo TEXT,
-        numero_serie TEXT,
+            endereco TEXT,
+            cidade TEXT,
+            bairro TEXT,
+            cep TEXT,
+            uf TEXT,
 
-        contador_geral TEXT,
+            marca TEXT,
+            modelo TEXT,
+            numero_serie TEXT,
 
-        motivo TEXT,
-        diagnostico TEXT,
-        servico_executado TEXT,
+            contador_geral TEXT,
 
-        hora_inicio TEXT,
-        hora_fim TEXT,
+            motivo TEXT,
+            diagnostico TEXT,
+            servico_executado TEXT,
 
-        criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-    );
+            pecas TEXT,
+            status TEXT,
+            tecnico TEXT,
+            observacoes TEXT,
+
+            hora_inicio TEXT,
+            hora_fim TEXT,
+
+            criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+
+        );
     """)
 
-    # Atualiza bancos antigos sem perder dados
-    novas_colunas = [
+    # Compatibilidade com bancos antigos
+    colunas = [
         "ALTER TABLE relatorios ADD COLUMN IF NOT EXISTS pecas TEXT;",
         "ALTER TABLE relatorios ADD COLUMN IF NOT EXISTS status TEXT;",
         "ALTER TABLE relatorios ADD COLUMN IF NOT EXISTS tecnico TEXT;",
         "ALTER TABLE relatorios ADD COLUMN IF NOT EXISTS observacoes TEXT;"
     ]
 
-    for query in novas_colunas:
-        execute_query(query)
+    for coluna in colunas:
+        execute_query(coluna)
 
-    print("Tabela 'relatorios' verificada e atualizada com sucesso.")
+    print("Banco de dados verificado com sucesso.")
 
 
 if __name__ == "__main__":

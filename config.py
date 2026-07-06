@@ -4,12 +4,17 @@ import os
 # CONFIGURAÇÕES GERAIS
 # =========================
 
-# URL do banco PostgreSQL (Render)
-DATABASE_URL = os.getenv("DATABASE_URL")
+# Banco de dados
+# Local: SQLite
+# Produção (Render): PostgreSQL
+DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///relatorios.db")
 
-if not DATABASE_URL:
-    raise RuntimeError(
-        "A variável de ambiente DATABASE_URL não foi configurada."
+# Corrige URLs antigas do Render
+if DATABASE_URL.startswith("postgres://"):
+    DATABASE_URL = DATABASE_URL.replace(
+        "postgres://",
+        "postgresql://",
+        1
     )
 
 # Token de acesso ao painel administrativo

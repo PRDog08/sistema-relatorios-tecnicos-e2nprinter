@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request, redirect, url_for, session
-from config import DATABASE_URL, ADMIN_TOKEN
+from config import ADMIN_TOKEN
 from database import (
     get_relatorios,
     get_relatorio_by_id,

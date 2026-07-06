@@ -37,35 +37,35 @@
 
             <div class="card-relatorio">
 
-                <h3>{{ r.cliente }}</h3>
+    <h3>{{ r.get('cliente', '-') }}</h3>
 
-                <p><strong>Modelo:</strong> {{ r.modelo or "-" }}</p>
+    <p><strong>Modelo:</strong> {{ r.get('modelo', '-') }}</p>
 
-                <p><strong>Telefone:</strong> {{ r.telefone or "-" }}</p>
+    <p><strong>Telefone:</strong> {{ r.get('telefone', '-') }}</p>
 
-                <p><strong>Status:</strong> {{ r.status or "Não informado" }}</p>
+    <p><strong>Status:</strong> {{ r.get('status', 'Não informado') }}</p>
 
-                <p><strong>Técnico:</strong> {{ r.tecnico or "-" }}</p>
+    <p><strong>Técnico:</strong> {{ r.get('tecnico', '-') }}</p>
 
-                <div class="acoes-card">
+    <div class="acoes-card">
 
-                    <a href="{{ url_for('ver_relatorio', id=r.id) }}"
-                       target="_blank">
-                        Abrir RAT
-                    </a>
+        <a href="{{ url_for('ver_relatorio', id=r.get('id')) }}"
+           target="_blank">
+            Abrir RAT
+        </a>
 
-                    <a href="{{ url_for('editar', id=r.id) }}">
-                        Editar
-                    </a>
+        <a href="{{ url_for('editar', id=r.get('id')) }}">
+            Editar
+        </a>
 
-                    <a href="{{ url_for('deletar', id=r.id) }}"
-                       onclick="return confirm('Deseja realmente excluir este relatório?')">
-                        Excluir
-                    </a>
+        <a href="{{ url_for('deletar', id=r.get('id')) }}"
+           onclick="return confirm('Deseja realmente excluir este relatório?')">
+            Excluir
+        </a>
 
-                </div>
+    </div>
 
-            </div>
+</div>
 
             {% endfor %}
 
