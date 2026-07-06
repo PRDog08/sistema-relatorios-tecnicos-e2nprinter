@@ -1,14 +1,28 @@
 <!DOCTYPE html>
-<html>
+<html lang="pt-BR">
 <head>
+    <meta charset="UTF-8">
     <title>Login - E2nPrinter</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-    <h2>Login do Sistema</h2>
+    <main class="container">
+        <section class="card">
+            <h2>Login do sistema</h2>
+            <p>Informe o token de acesso administrativo.</p>
 
-    <form method="POST">
-        <input type="password" name="token" placeholder="Token de acesso">
-        <button type="submit">Entrar</button>
-    </form>
+            <form method="POST" class="formulario">
+                <label>
+                    Token de acesso
+                    <input type="password" name="token" required autofocus>
+                </label>
+
+                <div class="form-actions">
+                    <button type="submit">Entrar</button>
+                </div>
+            </form>
+        </section>
+    </main>
 </body>
 </html>

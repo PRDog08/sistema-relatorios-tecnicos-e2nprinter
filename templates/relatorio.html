@@ -1,131 +1,40 @@
 {% extends "base.html" %}
 
 {% block conteudo %}
-
-{% set criado_em = relatorio.get("criado_em") %}
-{% if criado_em %}
-    {% set data_raw = criado_em[:10] %}
-    {% set data_formatada = data_raw[8:10] ~ "/" ~ data_raw[5:7] ~ "/" ~ data_raw[0:4] %}
-{% else %}
-    {% set data_formatada = "-" %}
-{% endif %}
-
 <section class="rat-view">
-
     <div class="rat-print">
+        <img
+            class="rat-fundo"
+            src="{{ url_for('static', filename='rat-modelo.png') }}"
+            alt="Modelo RAT"
+        >
 
-        <img class="rat-fundo"
-             src="{{ url_for('static', filename='rat-modelo.png') }}"
-             alt="Modelo RAT">
-
-        <!-- Número do RAT -->
-        <div class="rat-campo rat-numero-rat">
-            {{ relatorio.get("id") or "-" }}
-        </div>
-
-        <!-- Cliente -->
-        <div class="rat-campo rat-cliente">
-            {{ relatorio.get("cliente") or "-" }}
-        </div>
-
-        <div class="rat-campo rat-hora-inicio">
-            {{ relatorio.get("hora_inicio") or "-" }}
-        </div>
-
-        <!-- Responsável -->
-        <div class="rat-campo rat-responsavel">
-            {{ relatorio.get("responsavel") or "-" }}
-        </div>
-
-        <div class="rat-campo rat-telefone">
-            {{ relatorio.get("telefone") or "-" }}
-        </div>
-
-        <div class="rat-campo rat-hora-fim">
-            {{ relatorio.get("hora_fim") or "-" }}
-        </div>
-
-        <!-- Endereço -->
-        <div class="rat-campo rat-endereco">
-            {{ relatorio.get("endereco") or "-" }}
-        </div>
-
-        <div class="rat-campo rat-data">
-            {{ data_formatada }}
-        </div>
-
-        <div class="rat-campo rat-cidade">
-            {{ relatorio.get("cidade") or "-" }}
-        </div>
-
-        <div class="rat-campo rat-bairro">
-            {{ relatorio.get("bairro") or "-" }}
-        </div>
-
-        <div class="rat-campo rat-cep">
-            {{ relatorio.get("cep") or "-" }}
-        </div>
-
-        <div class="rat-campo rat-uf">
-            {{ relatorio.get("uf") or "-" }}
-        </div>
-
-        <!-- Equipamento -->
-        <div class="rat-campo rat-modelo">
-            {{ relatorio.get("modelo") or "-" }}
-        </div>
-
-        <div class="rat-campo rat-serie">
-            {{ relatorio.get("numero_serie") or "-" }}
-        </div>
-
-        <div class="rat-campo rat-contador">
-            {{ relatorio.get("contador_geral") or "-" }}
-        </div>
-
-        <!-- Defeito -->
-        <div class="rat-campo rat-motivo">
-            {{ relatorio.get("motivo") or "-" }}
-        </div>
-
-        <!-- Diagnóstico -->
-        <div class="rat-campo rat-diagnostico">
-            Diagnóstico: {{ relatorio.get("diagnostico") or "-" }}
-        </div>
-
-        <!-- Serviço -->
-        <div class="rat-campo rat-servico-executado">
-            Serviço executado: {{ relatorio.get("servico_executado") or "-" }}
-        </div>
-
-        <!-- Peças -->
-        <div class="rat-campo rat-pecas">
-            {{ relatorio.get("pecas") or "Nenhuma peça informada." }}
-        </div>
-
-        <!-- Técnico -->
-        <div class="rat-campo rat-tecnico">
-            {{ relatorio.get("tecnico") or "-" }}
-        </div>
-
+        <div class="rat-campo rat-numero-rat">{{ relatorio.id or "-" }}</div>
+        <div class="rat-campo rat-cliente">{{ relatorio.cliente or "-" }}</div>
+        <div class="rat-campo rat-hora-inicio">{{ relatorio.hora_inicio or "-" }}</div>
+        <div class="rat-campo rat-responsavel">{{ relatorio.responsavel or "-" }}</div>
+        <div class="rat-campo rat-telefone">{{ relatorio.telefone or "-" }}</div>
+        <div class="rat-campo rat-hora-fim">{{ relatorio.hora_fim or "-" }}</div>
+        <div class="rat-campo rat-endereco">{{ relatorio.endereco or "-" }}</div>
+        <div class="rat-campo rat-data">{{ relatorio.criado_em.strftime("%d/%m/%Y") if relatorio.criado_em else "-" }}</div>
+        <div class="rat-campo rat-cidade">{{ relatorio.cidade or "-" }}</div>
+        <div class="rat-campo rat-bairro">{{ relatorio.bairro or "-" }}</div>
+        <div class="rat-campo rat-cep">{{ relatorio.cep or "-" }}</div>
+        <div class="rat-campo rat-uf">{{ relatorio.uf or "-" }}</div>
+        <div class="rat-campo rat-modelo">{{ relatorio.equipamento or "-" }}</div>
+        <div class="rat-campo rat-serie">{{ relatorio.numero_serie or "-" }}</div>
+        <div class="rat-campo rat-contador">{{ relatorio.contador_geral or "-" }}</div>
+        <div class="rat-campo rat-motivo">{{ relatorio.defeito_relatado or "-" }}</div>
+        <div class="rat-campo rat-diagnostico">Diagnostico: {{ relatorio.diagnostico or "-" }}</div>
+        <div class="rat-campo rat-servico-executado">Servico executado: {{ relatorio.servico_executado or "-" }}</div>
+        <div class="rat-campo rat-pecas">{{ relatorio.pecas or "Nenhuma peca informada." }}</div>
+        <div class="rat-campo rat-tecnico">{{ relatorio.tecnico or "-" }}</div>
     </div>
 
     <div class="acoes rat-acoes">
-
-        <button type="button" onclick="window.print()">
-            Imprimir / Salvar em PDF
-        </button>
-
-        <a href="{{ url_for('novo_relatorio') }}">
-            Novo relatório
-        </a>
-
-        <a href="{{ url_for('index') }}">
-            Voltar ao painel
-        </a>
-
+        <button type="button" onclick="window.print()">Imprimir / Salvar em PDF</button>
+        <a href="{{ url_for('novo_relatorio') }}">Novo relatorio</a>
+        <a href="{{ url_for('admin') }}">Voltar ao painel</a>
     </div>
-
 </section>
-
 {% endblock %}

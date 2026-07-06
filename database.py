@@ -1,191 +1,106 @@
-import psycopg
-from psycopg.rows import dict_row
-from config import DATABASE_URL
+from app import Relatorio, app, db
 
 
-# =========================
-# CONEXÃO COM BANCO
-# =========================
+def _to_dict(relatorio):
+    return {
+        "id": relatorio.id,
+        "cliente": relatorio.cliente,
+        "telefone": relatorio.telefone,
+        "responsavel": relatorio.responsavel,
+        "endereco": relatorio.endereco,
+        "cidade": relatorio.cidade,
+        "bairro": relatorio.bairro,
+        "cep": relatorio.cep,
+        "uf": relatorio.uf,
+        "marca": relatorio.marca,
+        "modelo": relatorio.equipamento,
+        "equipamento": relatorio.equipamento,
+        "numero_serie": relatorio.numero_serie,
+        "contador_geral": relatorio.contador_geral,
+        "motivo": relatorio.defeito_relatado,
+        "defeito_relatado": relatorio.defeito_relatado,
+        "diagnostico": relatorio.diagnostico,
+        "servico_executado": relatorio.servico_executado,
+        "pecas": relatorio.pecas,
+        "status": relatorio.status,
+        "tecnico": relatorio.tecnico,
+        "observacoes": relatorio.observacoes,
+        "hora_inicio": relatorio.hora_inicio,
+        "hora_fim": relatorio.hora_fim,
+        "criado_em": relatorio.criado_em,
+    }
 
-def get_connection():
-    """
-    Retorna uma conexão com o PostgreSQL.
-    """
-    if not DATABASE_URL:
-        raise RuntimeError("DATABASE_URL não configurada.")
-
-    return psycopg.connect(
-        DATABASE_URL,
-        row_factory=dict_row
-    )
-
-
-# =========================
-# EXECUTOR GENÉRICO
-# =========================
-
-def execute_query(query, params=None, fetch=False, fetchone=False):
-    conn = get_connection()
-    cur = conn.cursor()
-
-    try:
-        cur.execute(query, params or {})
-
-        resultado = None
-
-        if fetch:
-            resultado = cur.fetchall()
-
-        elif fetchone:
-            resultado = cur.fetchone()
-
-        conn.commit()
-        return resultado
-
-    except Exception:
-        conn.rollback()
-        raise
-
-    finally:
-        cur.close()
-        conn.close()
-
-
-# =========================
-# RELATÓRIOS
-# =========================
 
 def get_relatorios():
-    return execute_query(
-        "SELECT * FROM relatorios ORDER BY id DESC",
-        fetch=True
-    )
+    with app.app_context():
+        return [_to_dict(item) for item in Relatorio.query.order_by(Relatorio.id.desc()).all()]
 
 
 def get_relatorio_by_id(relatorio_id):
-    return execute_query(
-        "SELECT * FROM relatorios WHERE id=%s",
-        (relatorio_id,),
-        fetchone=True
-    )
+    with app.app_context():
+        relatorio = Relatorio.query.get(relatorio_id)
+        return _to_dict(relatorio) if relatorio else None
 
 
 def create_relatorio(data):
-
-    query = """
-        INSERT INTO relatorios (
-
-            cliente,
-            telefone,
-            responsavel,
-
-            endereco,
-            cidade,
-            bairro,
-            cep,
-            uf,
-
-            marca,
-            modelo,
-            numero_serie,
-
-            contador_geral,
-
-            motivo,
-            diagnostico,
-            servico_executado,
-
-            pecas,
-            status,
-            tecnico,
-            observacoes,
-
-            hora_inicio,
-            hora_fim
-
+    with app.app_context():
+        relatorio = Relatorio(
+            cliente=data.get("cliente"),
+            telefone=data.get("telefone"),
+            responsavel=data.get("responsavel"),
+            endereco=data.get("endereco"),
+            cidade=data.get("cidade"),
+            bairro=data.get("bairro"),
+            cep=data.get("cep"),
+            uf=data.get("uf"),
+            marca=data.get("marca") or "Konica Minolta",
+            equipamento=data.get("equipamento") or data.get("modelo"),
+            numero_serie=data.get("numero_serie"),
+            contador_geral=data.get("contador_geral"),
+            defeito_relatado=data.get("defeito_relatado") or data.get("motivo"),
+            diagnostico=data.get("diagnostico"),
+            servico_executado=data.get("servico_executado"),
+            pecas=data.get("pecas"),
+            status=data.get("status") or "Concluido",
+            tecnico=data.get("tecnico"),
+            observacoes=data.get("observacoes"),
+            hora_inicio=data.get("hora_inicio"),
+            hora_fim=data.get("hora_fim"),
         )
-
-        VALUES (
-
-            %(cliente)s,
-            %(telefone)s,
-            %(responsavel)s,
-
-            %(endereco)s,
-            %(cidade)s,
-            %(bairro)s,
-            %(cep)s,
-            %(uf)s,
-
-            %(marca)s,
-            %(modelo)s,
-            %(numero_serie)s,
-
-            %(contador_geral)s,
-
-            %(motivo)s,
-            %(diagnostico)s,
-            %(servico_executado)s,
-
-            %(pecas)s,
-            %(status)s,
-            %(tecnico)s,
-            %(observacoes)s,
-
-            %(hora_inicio)s,
-            %(hora_fim)s
-
-        )
-    """
-
-    execute_query(query, data)
+        db.session.add(relatorio)
+        db.session.commit()
+        return relatorio.id
 
 
 def update_relatorio(relatorio_id, data):
-
-    query = """
-        UPDATE relatorios SET
-
-            cliente=%(cliente)s,
-            telefone=%(telefone)s,
-            responsavel=%(responsavel)s,
-
-            endereco=%(endereco)s,
-            cidade=%(cidade)s,
-            bairro=%(bairro)s,
-            cep=%(cep)s,
-            uf=%(uf)s,
-
-            marca=%(marca)s,
-            modelo=%(modelo)s,
-            numero_serie=%(numero_serie)s,
-
-            contador_geral=%(contador_geral)s,
-
-            motivo=%(motivo)s,
-            diagnostico=%(diagnostico)s,
-            servico_executado=%(servico_executado)s,
-
-            pecas=%(pecas)s,
-            status=%(status)s,
-            tecnico=%(tecnico)s,
-            observacoes=%(observacoes)s,
-
-            hora_inicio=%(hora_inicio)s,
-            hora_fim=%(hora_fim)s
-
-        WHERE id=%(id)s
-    """
-
-    data["id"] = relatorio_id
-
-    execute_query(query, data)
+    with app.app_context():
+        relatorio = Relatorio.query.get_or_404(relatorio_id)
+        relatorio.cliente = data.get("cliente")
+        relatorio.telefone = data.get("telefone")
+        relatorio.responsavel = data.get("responsavel")
+        relatorio.endereco = data.get("endereco")
+        relatorio.cidade = data.get("cidade")
+        relatorio.bairro = data.get("bairro")
+        relatorio.cep = data.get("cep")
+        relatorio.uf = data.get("uf")
+        relatorio.marca = data.get("marca") or "Konica Minolta"
+        relatorio.equipamento = data.get("equipamento") or data.get("modelo")
+        relatorio.numero_serie = data.get("numero_serie")
+        relatorio.contador_geral = data.get("contador_geral")
+        relatorio.defeito_relatado = data.get("defeito_relatado") or data.get("motivo")
+        relatorio.diagnostico = data.get("diagnostico")
+        relatorio.servico_executado = data.get("servico_executado")
+        relatorio.pecas = data.get("pecas")
+        relatorio.status = data.get("status") or "Concluido"
+        relatorio.tecnico = data.get("tecnico")
+        relatorio.observacoes = data.get("observacoes")
+        relatorio.hora_inicio = data.get("hora_inicio")
+        relatorio.hora_fim = data.get("hora_fim")
+        db.session.commit()
 
 
 def delete_relatorio(relatorio_id):
-
-    execute_query(
-        "DELETE FROM relatorios WHERE id=%s",
-        (relatorio_id,)
-    )
-    
+    with app.app_context():
+        relatorio = Relatorio.query.get_or_404(relatorio_id)
+        db.session.delete(relatorio)
+        db.session.commit()

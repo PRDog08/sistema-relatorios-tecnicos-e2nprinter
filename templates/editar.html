@@ -1,0 +1,276 @@
+{% extends "base.html" %}
+
+{% block conteudo %}
+<section class="card">
+    <div class="cabecalho-painel">
+        <div>
+            <h2>Editar relatorio #{{ relatorio.id }}</h2>
+            <p>Atualize os dados do atendimento tecnico.</p>
+        </div>
+
+        <a class="botao-secundario" href="{{ url_for('admin') }}">Voltar ao painel</a>
+    </div>
+
+    <form action="{{ url_for('editar_relatorio', relatorio_id=relatorio.id) }}" method="POST" class="formulario">
+        <div class="form-section">
+            <h3>Dados do cliente</h3>
+            <div class="grid">
+                <label>
+                    Cliente *
+                    <input type="text" name="cliente" required value="{{ relatorio.cliente or '' }}">
+                </label>
+                <label>
+                    Responsavel
+                    <input type="text" name="responsavel" value="{{ relatorio.responsavel or '' }}">
+                </label>
+                <label>
+                    Telefone *
+                    <input type="text" name="telefone" inputmode="numeric" pattern="[0-9]{10,11}" maxlength="11" required value="{{ relatorio.telefone or '' }}">
+                </label>
+                <label>
+                    CEP
+                    <input type="text" name="cep" inputmode="numeric" pattern="[0-9]{8}" maxlength="8" value="{{ relatorio.cep or '' }}">
+                </label>
+            </div>
+        </div>
+
+        <div class="form-section">
+            <h3>Endereco</h3>
+            <div class="grid">
+                <label class="campo-largo">
+                    Endereco
+                    <input type="text" name="endereco" value="{{ relatorio.endereco or '' }}">
+                </label>
+                <label>
+                    Cidade
+                    <input type="text" name="cidade" value="{{ relatorio.cidade or '' }}">
+                </label>
+                <label>
+                    Bairro
+                    <input type="text" name="bairro" value="{{ relatorio.bairro or '' }}">
+                </label>
+                <label>
+                    UF
+                    <input type="text" name="uf" maxlength="2" value="{{ relatorio.uf or '' }}">
+                </label>
+            </div>
+        </div>
+
+        <div class="form-section">
+            <h3>Equipamento</h3>
+            <div class="grid">
+                <label>
+                    Marca
+                    <input type="text" name="marca" value="{{ relatorio.marca or 'Konica Minolta' }}">
+                </label>
+                <label>
+                    Equipamento / modelo *
+                    <select name="equipamento" required data-modelo-atual="{{ relatorio.equipamento or '' }}">
+                        <option value="">Selecione o modelo atendido</option>
+
+                        <optgroup label="Linha Office - A3 Coloridas">
+                            <option {% if relatorio.equipamento == 'Bizhub C200' %}selected{% endif %}>Bizhub C200</option>
+                            <option {% if relatorio.equipamento == 'Bizhub C203' %}selected{% endif %}>Bizhub C203</option>
+                            <option {% if relatorio.equipamento == 'Bizhub C220' %}selected{% endif %}>Bizhub C220</option>
+                            <option {% if relatorio.equipamento == 'Bizhub C221' %}selected{% endif %}>Bizhub C221</option>
+                            <option {% if relatorio.equipamento == 'Bizhub C224' %}selected{% endif %}>Bizhub C224</option>
+                            <option {% if relatorio.equipamento == 'Bizhub C224e' %}selected{% endif %}>Bizhub C224e</option>
+                            <option {% if relatorio.equipamento == 'Bizhub C227' %}selected{% endif %}>Bizhub C227</option>
+                            <option {% if relatorio.equipamento == 'Bizhub C250' %}selected{% endif %}>Bizhub C250</option>
+                            <option {% if relatorio.equipamento == 'Bizhub C250i' %}selected{% endif %}>Bizhub C250i</option>
+                            <option {% if relatorio.equipamento == 'Bizhub C251i' %}selected{% endif %}>Bizhub C251i</option>
+                            <option {% if relatorio.equipamento == 'Bizhub C253' %}selected{% endif %}>Bizhub C253</option>
+                            <option {% if relatorio.equipamento == 'Bizhub C258' %}selected{% endif %}>Bizhub C258</option>
+                            <option {% if relatorio.equipamento == 'Bizhub C280' %}selected{% endif %}>Bizhub C280</option>
+                            <option {% if relatorio.equipamento == 'Bizhub C281' %}selected{% endif %}>Bizhub C281</option>
+                            <option {% if relatorio.equipamento == 'Bizhub C284' %}selected{% endif %}>Bizhub C284</option>
+                            <option {% if relatorio.equipamento == 'Bizhub C284e' %}selected{% endif %}>Bizhub C284e</option>
+                            <option {% if relatorio.equipamento == 'Bizhub C287' %}selected{% endif %}>Bizhub C287</option>
+                            <option {% if relatorio.equipamento == 'Bizhub C300i' %}selected{% endif %}>Bizhub C300i</option>
+                            <option {% if relatorio.equipamento == 'Bizhub C301i' %}selected{% endif %}>Bizhub C301i</option>
+                            <option {% if relatorio.equipamento == 'Bizhub C308' %}selected{% endif %}>Bizhub C308</option>
+                            <option {% if relatorio.equipamento == 'Bizhub C353' %}selected{% endif %}>Bizhub C353</option>
+                            <option {% if relatorio.equipamento == 'Bizhub C360' %}selected{% endif %}>Bizhub C360</option>
+                            <option {% if relatorio.equipamento == 'Bizhub C360i' %}selected{% endif %}>Bizhub C360i</option>
+                            <option {% if relatorio.equipamento == 'Bizhub C361i' %}selected{% endif %}>Bizhub C361i</option>
+                            <option {% if relatorio.equipamento == 'Bizhub C364' %}selected{% endif %}>Bizhub C364</option>
+                            <option {% if relatorio.equipamento == 'Bizhub C364e' %}selected{% endif %}>Bizhub C364e</option>
+                            <option {% if relatorio.equipamento == 'Bizhub C368' %}selected{% endif %}>Bizhub C368</option>
+                            <option {% if relatorio.equipamento == 'Bizhub C450i' %}selected{% endif %}>Bizhub C450i</option>
+                            <option {% if relatorio.equipamento == 'Bizhub C451i' %}selected{% endif %}>Bizhub C451i</option>
+                            <option {% if relatorio.equipamento == 'Bizhub C454' %}selected{% endif %}>Bizhub C454</option>
+                            <option {% if relatorio.equipamento == 'Bizhub C454e' %}selected{% endif %}>Bizhub C454e</option>
+                            <option {% if relatorio.equipamento == 'Bizhub C458' %}selected{% endif %}>Bizhub C458</option>
+                            <option {% if relatorio.equipamento == 'Bizhub C550i' %}selected{% endif %}>Bizhub C550i</option>
+                            <option {% if relatorio.equipamento == 'Bizhub C551i' %}selected{% endif %}>Bizhub C551i</option>
+                            <option {% if relatorio.equipamento == 'Bizhub C554' %}selected{% endif %}>Bizhub C554</option>
+                            <option {% if relatorio.equipamento == 'Bizhub C554e' %}selected{% endif %}>Bizhub C554e</option>
+                            <option {% if relatorio.equipamento == 'Bizhub C558' %}selected{% endif %}>Bizhub C558</option>
+                            <option {% if relatorio.equipamento == 'Bizhub C650i' %}selected{% endif %}>Bizhub C650i</option>
+                            <option {% if relatorio.equipamento == 'Bizhub C651i' %}selected{% endif %}>Bizhub C651i</option>
+                            <option {% if relatorio.equipamento == 'Bizhub C654' %}selected{% endif %}>Bizhub C654</option>
+                            <option {% if relatorio.equipamento == 'Bizhub C654e' %}selected{% endif %}>Bizhub C654e</option>
+                            <option {% if relatorio.equipamento == 'Bizhub C658' %}selected{% endif %}>Bizhub C658</option>
+                            <option {% if relatorio.equipamento == 'Bizhub C659' %}selected{% endif %}>Bizhub C659</option>
+                            <option {% if relatorio.equipamento == 'Bizhub C750i' %}selected{% endif %}>Bizhub C750i</option>
+                            <option {% if relatorio.equipamento == 'Bizhub C754' %}selected{% endif %}>Bizhub C754</option>
+                            <option {% if relatorio.equipamento == 'Bizhub C754e' %}selected{% endif %}>Bizhub C754e</option>
+                            <option {% if relatorio.equipamento == 'Bizhub C759' %}selected{% endif %}>Bizhub C759</option>
+                        </optgroup>
+
+                        <optgroup label="Linha Office - A4 Coloridas">
+                            <option {% if relatorio.equipamento == 'Bizhub C10' %}selected{% endif %}>Bizhub C10</option>
+                            <option {% if relatorio.equipamento == 'Bizhub C20' %}selected{% endif %}>Bizhub C20</option>
+                            <option {% if relatorio.equipamento == 'Bizhub C25' %}selected{% endif %}>Bizhub C25</option>
+                            <option {% if relatorio.equipamento == 'Bizhub C30P' %}selected{% endif %}>Bizhub C30P</option>
+                            <option {% if relatorio.equipamento == 'Bizhub C31P' %}selected{% endif %}>Bizhub C31P</option>
+                            <option {% if relatorio.equipamento == 'Bizhub C35' %}selected{% endif %}>Bizhub C35</option>
+                            <option {% if relatorio.equipamento == 'Bizhub C35P' %}selected{% endif %}>Bizhub C35P</option>
+                            <option {% if relatorio.equipamento == 'Bizhub C3100P' %}selected{% endif %}>Bizhub C3100P</option>
+                            <option {% if relatorio.equipamento == 'Bizhub C3110' %}selected{% endif %}>Bizhub C3110</option>
+                            <option {% if relatorio.equipamento == 'Bizhub C3300i' %}selected{% endif %}>Bizhub C3300i</option>
+                            <option {% if relatorio.equipamento == 'Bizhub C3320i' %}selected{% endif %}>Bizhub C3320i</option>
+                            <option {% if relatorio.equipamento == 'Bizhub C3350' %}selected{% endif %}>Bizhub C3350</option>
+                            <option {% if relatorio.equipamento == 'Bizhub C3350i' %}selected{% endif %}>Bizhub C3350i</option>
+                            <option {% if relatorio.equipamento == 'Bizhub C3351' %}selected{% endif %}>Bizhub C3351</option>
+                            <option {% if relatorio.equipamento == 'Bizhub C3850' %}selected{% endif %}>Bizhub C3850</option>
+                            <option {% if relatorio.equipamento == 'Bizhub C3850FS' %}selected{% endif %}>Bizhub C3850FS</option>
+                            <option {% if relatorio.equipamento == 'Bizhub C3851' %}selected{% endif %}>Bizhub C3851</option>
+                            <option {% if relatorio.equipamento == 'Bizhub C3851FS' %}selected{% endif %}>Bizhub C3851FS</option>
+                            <option {% if relatorio.equipamento == 'Bizhub C4000i' %}selected{% endif %}>Bizhub C4000i</option>
+                            <option {% if relatorio.equipamento == 'Bizhub C4050i' %}selected{% endif %}>Bizhub C4050i</option>
+                            <option {% if relatorio.equipamento == 'Bizhub C4051i' %}selected{% endif %}>Bizhub C4051i</option>
+                        </optgroup>
+
+                        <optgroup label="Linha Pro - Bizhub PRO / PRESS">
+                            <option {% if relatorio.equipamento == 'Bizhub PRO C500' %}selected{% endif %}>Bizhub PRO C500</option>
+                            <option {% if relatorio.equipamento == 'Bizhub PRO C5500' %}selected{% endif %}>Bizhub PRO C5500</option>
+                            <option {% if relatorio.equipamento == 'Bizhub PRO C6000' %}selected{% endif %}>Bizhub PRO C6000</option>
+                            <option {% if relatorio.equipamento == 'Bizhub PRO C7000' %}selected{% endif %}>Bizhub PRO C7000</option>
+                            <option {% if relatorio.equipamento == 'Bizhub PRO C8000' %}selected{% endif %}>Bizhub PRO C8000</option>
+                            <option {% if relatorio.equipamento == 'Bizhub PRESS C6000' %}selected{% endif %}>Bizhub PRESS C6000</option>
+                            <option {% if relatorio.equipamento == 'Bizhub PRESS C7000' %}selected{% endif %}>Bizhub PRESS C7000</option>
+                            <option {% if relatorio.equipamento == 'Bizhub PRESS C7000P' %}selected{% endif %}>Bizhub PRESS C7000P</option>
+                            <option {% if relatorio.equipamento == 'Bizhub PRESS C1060' %}selected{% endif %}>Bizhub PRESS C1060</option>
+                            <option {% if relatorio.equipamento == 'Bizhub PRESS C1070' %}selected{% endif %}>Bizhub PRESS C1070</option>
+                            <option {% if relatorio.equipamento == 'Bizhub PRESS C1070P' %}selected{% endif %}>Bizhub PRESS C1070P</option>
+                            <option {% if relatorio.equipamento == 'Bizhub PRESS C1085' %}selected{% endif %}>Bizhub PRESS C1085</option>
+                            <option {% if relatorio.equipamento == 'Bizhub PRESS C1100' %}selected{% endif %}>Bizhub PRESS C1100</option>
+                        </optgroup>
+
+                        <optgroup label="Linha Pro - Accurio">
+                            <option {% if relatorio.equipamento == 'AccurioPrint C2060L' %}selected{% endif %}>AccurioPrint C2060L</option>
+                            <option {% if relatorio.equipamento == 'AccurioPrint C3070L' %}selected{% endif %}>AccurioPrint C3070L</option>
+                            <option {% if relatorio.equipamento == 'AccurioPrint C4065' %}selected{% endif %}>AccurioPrint C4065</option>
+                            <option {% if relatorio.equipamento == 'AccurioPress C2060' %}selected{% endif %}>AccurioPress C2060</option>
+                            <option {% if relatorio.equipamento == 'AccurioPress C2070' %}selected{% endif %}>AccurioPress C2070</option>
+                            <option {% if relatorio.equipamento == 'AccurioPress C2070P' %}selected{% endif %}>AccurioPress C2070P</option>
+                            <option {% if relatorio.equipamento == 'AccurioPress C3070' %}selected{% endif %}>AccurioPress C3070</option>
+                            <option {% if relatorio.equipamento == 'AccurioPress C3070P' %}selected{% endif %}>AccurioPress C3070P</option>
+                            <option {% if relatorio.equipamento == 'AccurioPress C3080' %}selected{% endif %}>AccurioPress C3080</option>
+                            <option {% if relatorio.equipamento == 'AccurioPress C3080P' %}selected{% endif %}>AccurioPress C3080P</option>
+                            <option {% if relatorio.equipamento == 'AccurioPress C4070' %}selected{% endif %}>AccurioPress C4070</option>
+                            <option {% if relatorio.equipamento == 'AccurioPress C4080' %}selected{% endif %}>AccurioPress C4080</option>
+                            <option {% if relatorio.equipamento == 'AccurioPress C5070' %}selected{% endif %}>AccurioPress C5070</option>
+                            <option {% if relatorio.equipamento == 'AccurioPress C5080' %}selected{% endif %}>AccurioPress C5080</option>
+                            <option {% if relatorio.equipamento == 'AccurioPress C6085' %}selected{% endif %}>AccurioPress C6085</option>
+                            <option {% if relatorio.equipamento == 'AccurioPress C6100' %}selected{% endif %}>AccurioPress C6100</option>
+                            <option {% if relatorio.equipamento == 'AccurioPress C7090' %}selected{% endif %}>AccurioPress C7090</option>
+                            <option {% if relatorio.equipamento == 'AccurioPress C7100' %}selected{% endif %}>AccurioPress C7100</option>
+                            <option {% if relatorio.equipamento == 'AccurioPress C12000' %}selected{% endif %}>AccurioPress C12000</option>
+                            <option {% if relatorio.equipamento == 'AccurioPress C14000' %}selected{% endif %}>AccurioPress C14000</option>
+                        </optgroup>
+                    </select>
+                </label>
+                <label>
+                    Numero de serie
+                    <input type="text" name="numero_serie" value="{{ relatorio.numero_serie or '' }}">
+                </label>
+                <label>
+                    Contador geral
+                    <input type="text" name="contador_geral" value="{{ relatorio.contador_geral or '' }}">
+                </label>
+            </div>
+        </div>
+
+        <div class="form-section">
+            <h3>Atendimento tecnico</h3>
+            <div class="grid">
+                <label>
+                    Hora inicial
+                    <input type="time" name="hora_inicio" value="{{ relatorio.hora_inicio or '' }}">
+                </label>
+                <label>
+                    Hora final
+                    <input type="time" name="hora_fim" value="{{ relatorio.hora_fim or '' }}">
+                </label>
+                <label class="campo-largo">
+                    Defeito relatado
+                    <textarea name="defeito_relatado">{{ relatorio.defeito_relatado or '' }}</textarea>
+                </label>
+                <label class="campo-largo">
+                    Diagnostico
+                    <textarea name="diagnostico">{{ relatorio.diagnostico or '' }}</textarea>
+                </label>
+                <label class="campo-largo">
+                    Servico executado
+                    <textarea name="servico_executado">{{ relatorio.servico_executado or '' }}</textarea>
+                </label>
+                <label class="campo-largo">
+                    Pecas
+                    <textarea name="pecas">{{ relatorio.pecas or '' }}</textarea>
+                </label>
+            </div>
+        </div>
+
+        <div class="form-section">
+            <h3>Conclusao</h3>
+            <div class="grid">
+                <label>
+                    Status
+                    <select name="status">
+                        {% for opcao in ["Concluido", "Pendente", "Aguardando peca", "Retorno necessario"] %}
+                            <option value="{{ opcao }}" {% if relatorio.status == opcao %}selected{% endif %}>{{ opcao }}</option>
+                        {% endfor %}
+                    </select>
+                </label>
+                <label>
+                    Tecnico
+                    <input type="text" name="tecnico" value="{{ relatorio.tecnico or '' }}">
+                </label>
+                <label class="campo-largo">
+                    Observacoes finais
+                    <textarea name="observacoes">{{ relatorio.observacoes or '' }}</textarea>
+                </label>
+            </div>
+        </div>
+
+        <div class="form-actions">
+            <button type="submit">Salvar alteracoes</button>
+        </div>
+    </form>
+</section>
+
+<script>
+    const selectModelo = document.querySelector('select[name="equipamento"]');
+
+    if (selectModelo) {
+        const modeloAtual = selectModelo.dataset.modeloAtual;
+
+        if (modeloAtual) {
+            const existeNaLista = Array.from(selectModelo.options)
+                .some((option) => option.value === modeloAtual || option.textContent === modeloAtual);
+
+            if (existeNaLista) {
+                selectModelo.value = modeloAtual;
+            } else {
+                const optionAtual = document.createElement("option");
+                optionAtual.value = modeloAtual;
+                optionAtual.textContent = "Modelo atual nao listado: " + modeloAtual;
+                optionAtual.selected = true;
+                selectModelo.insertBefore(optionAtual, selectModelo.children[1]);
+            }
+        }
+    }
+</script>
+{% endblock %}

@@ -1,334 +1,254 @@
 {% extends "base.html" %}
 
 {% block conteudo %}
-
 <section class="card">
-
     <div class="cabecalho-painel">
         <div>
-            <h2>Editar relatório técnico</h2>
-            <p>Atualize os dados do atendimento técnico.</p>
+            <h2>Novo relatorio tecnico</h2>
+            <p>Preencha os dados do atendimento tecnico.</p>
         </div>
 
-        <a class="botao-secundario"
-           href="{{ url_for('index') }}">
-            Voltar ao painel
-        </a>
+        <a class="botao-secundario" href="{{ url_for('admin') }}">Voltar</a>
     </div>
 
-    <form action="{{ url_for('editar_relatorio') }}" method="POST">
-
-        <!-- ========================= -->
-        <!-- DADOS DO CLIENTE -->
-        <!-- ========================= -->
-
+    <form action="{{ url_for('criar_relatorio') }}" method="POST" class="formulario">
         <div class="form-section">
             <h3>Dados do cliente</h3>
-
             <div class="grid">
-
                 <label>
                     Cliente *
-                    <input type="text" name="cliente" required value="{{ relatorio.get('cliente','') }}">
+                    <input type="text" name="cliente" required>
                 </label>
-
                 <label>
-                    Responsável
-                    <input type="text" name="responsavel" value="{{ relatorio.get('responsavel','') }}">
+                    Responsavel
+                    <input type="text" name="responsavel">
                 </label>
-
                 <label>
-                    Telefone
-                    <input type="text"
-                           name="telefone"
-                           inputmode="numeric"
-                           pattern="[0-9]*"
-                           maxlength="11"
-                           class="somente-numeros"
-                           placeholder="Somente números"
-                           value="{{ relatorio.get('telefone','') }}">
+                    Telefone *
+                    <input type="text" name="telefone" inputmode="numeric" pattern="[0-9]{10,11}" maxlength="11" required>
                 </label>
-
                 <label>
                     CEP
-                    <input type="text"
-                           name="cep"
-                           inputmode="numeric"
-                           pattern="[0-9]*"
-                           maxlength="8"
-                           class="somente-numeros"
-                           placeholder="Somente números"
-                           value="{{ relatorio.get('cep','') }}">
+                    <input type="text" name="cep" inputmode="numeric" pattern="[0-9]{8}" maxlength="8">
                 </label>
-
             </div>
         </div>
 
-        <!-- ========================= -->
-        <!-- ENDEREÇO -->
-        <!-- ========================= -->
-
         <div class="form-section">
-            <h3>Endereço</h3>
-
+            <h3>Endereco</h3>
             <div class="grid">
-
                 <label class="campo-largo">
-                    Endereço
-                    <input type="text" name="endereco" value="{{ relatorio.get('endereco','') }}">
+                    Endereco
+                    <input type="text" name="endereco">
                 </label>
-
                 <label>
                     Cidade
-                    <input type="text" name="cidade" value="{{ relatorio.get('cidade','') }}">
+                    <input type="text" name="cidade">
                 </label>
-
                 <label>
                     Bairro
-                    <input type="text" name="bairro" value="{{ relatorio.get('bairro','') }}">
+                    <input type="text" name="bairro">
                 </label>
-
                 <label>
                     UF
-                    <input type="text" name="uf" maxlength="2" placeholder="SP"
-                           value="{{ relatorio.get('uf','') }}">
+                    <input type="text" name="uf" maxlength="2" placeholder="SP">
                 </label>
-
             </div>
         </div>
 
-        <!-- ========================= -->
-        <!-- EQUIPAMENTO -->
-        <!-- ========================= -->
-
         <div class="form-section">
-
             <h3>Equipamento</h3>
-
             <div class="grid">
-
                 <label>
                     Marca
-                    <input type="text" name="marca" value="Konica Minolta" readonly>
+                    <input type="text" name="marca" value="Konica Minolta">
                 </label>
-
                 <label>
-                    Equipamento / Modelo *
-                    <select name="equipamento"
-                            required
-                            data-modelo-atual="{{ relatorio.get('equipamento','') }}">
-
+                    Equipamento / modelo *
+                    <select name="equipamento" required>
                         <option value="">Selecione o modelo atendido</option>
 
                         <optgroup label="Linha Office - A3 Coloridas">
-                            <option value="Bizhub C200">Bizhub C200</option>
-                            <option value="Bizhub C203">Bizhub C203</option>
-                            <option value="Bizhub C220">Bizhub C220</option>
-                            <option value="Bizhub C221">Bizhub C221</option>
-                            <option value="Bizhub C224">Bizhub C224</option>
-                            <option value="Bizhub C224e">Bizhub C224e</option>
-                            <option value="Bizhub C227">Bizhub C227</option>
-                            <option value="Bizhub C250">Bizhub C250</option>
-                            <option value="Bizhub C250i">Bizhub C250i</option>
-                            <option value="Bizhub C251i">Bizhub C251i</option>
-                            <option value="Bizhub C253">Bizhub C253</option>
-                            <option value="Bizhub C258">Bizhub C258</option>
-                            <option value="Bizhub C280">Bizhub C280</option>
-                            <option value="Bizhub C281">Bizhub C281</option>
-                            <option value="Bizhub C284">Bizhub C284</option>
-                            <option value="Bizhub C284e">Bizhub C284e</option>
-                            <option value="Bizhub C287">Bizhub C287</option>
-                            <option value="Bizhub C300i">Bizhub C300i</option>
-                            <option value="Bizhub C301i">Bizhub C301i</option>
-                            <option value="Bizhub C308">Bizhub C308</option>
-                            <option value="Bizhub C353">Bizhub C353</option>
-                            <option value="Bizhub C360">Bizhub C360</option>
-                            <option value="Bizhub C360i">Bizhub C360i</option>
-                            <option value="Bizhub C361i">Bizhub C361i</option>
-                            <option value="Bizhub C364">Bizhub C364</option>
-                            <option value="Bizhub C364e">Bizhub C364e</option>
-                            <option value="Bizhub C368">Bizhub C368</option>
-                            <option value="Bizhub C450i">Bizhub C450i</option>
-                            <option value="Bizhub C451i">Bizhub C451i</option>
-                            <option value="Bizhub C454">Bizhub C454</option>
-                            <option value="Bizhub C454e">Bizhub C454e</option>
-                            <option value="Bizhub C458">Bizhub C458</option>
-                            <option value="Bizhub C550i">Bizhub C550i</option>
-                            <option value="Bizhub C551i">Bizhub C551i</option>
-                            <option value="Bizhub C554">Bizhub C554</option>
-                            <option value="Bizhub C554e">Bizhub C554e</option>
-                            <option value="Bizhub C558">Bizhub C558</option>
-                            <option value="Bizhub C650i">Bizhub C650i</option>
-                            <option value="Bizhub C651i">Bizhub C651i</option>
-                            <option value="Bizhub C654">Bizhub C654</option>
-                            <option value="Bizhub C654e">Bizhub C654e</option>
-                            <option value="Bizhub C658">Bizhub C658</option>
-                            <option value="Bizhub C659">Bizhub C659</option>
-                            <option value="Bizhub C750i">Bizhub C750i</option>
-                            <option value="Bizhub C754">Bizhub C754</option>
-                            <option value="Bizhub C754e">Bizhub C754e</option>
-                            <option value="Bizhub C759">Bizhub C759</option>
+                            <option>Bizhub C200</option>
+                            <option>Bizhub C203</option>
+                            <option>Bizhub C220</option>
+                            <option>Bizhub C221</option>
+                            <option>Bizhub C224</option>
+                            <option>Bizhub C224e</option>
+                            <option>Bizhub C227</option>
+                            <option>Bizhub C250</option>
+                            <option>Bizhub C250i</option>
+                            <option>Bizhub C251i</option>
+                            <option>Bizhub C253</option>
+                            <option>Bizhub C258</option>
+                            <option>Bizhub C280</option>
+                            <option>Bizhub C281</option>
+                            <option>Bizhub C284</option>
+                            <option>Bizhub C284e</option>
+                            <option>Bizhub C287</option>
+                            <option>Bizhub C300i</option>
+                            <option>Bizhub C301i</option>
+                            <option>Bizhub C308</option>
+                            <option>Bizhub C353</option>
+                            <option>Bizhub C360</option>
+                            <option>Bizhub C360i</option>
+                            <option>Bizhub C361i</option>
+                            <option>Bizhub C364</option>
+                            <option>Bizhub C364e</option>
+                            <option>Bizhub C368</option>
+                            <option>Bizhub C450i</option>
+                            <option>Bizhub C451i</option>
+                            <option>Bizhub C454</option>
+                            <option>Bizhub C454e</option>
+                            <option>Bizhub C458</option>
+                            <option>Bizhub C550i</option>
+                            <option>Bizhub C551i</option>
+                            <option>Bizhub C554</option>
+                            <option>Bizhub C554e</option>
+                            <option>Bizhub C558</option>
+                            <option>Bizhub C650i</option>
+                            <option>Bizhub C651i</option>
+                            <option>Bizhub C654</option>
+                            <option>Bizhub C654e</option>
+                            <option>Bizhub C658</option>
+                            <option>Bizhub C659</option>
+                            <option>Bizhub C750i</option>
+                            <option>Bizhub C754</option>
+                            <option>Bizhub C754e</option>
+                            <option>Bizhub C759</option>
                         </optgroup>
 
                         <optgroup label="Linha Office - A4 Coloridas">
-                            <option value="Bizhub C10">Bizhub C10</option>
-                            <option value="Bizhub C20">Bizhub C20</option>
-                            <option value="Bizhub C25">Bizhub C25</option>
-                            <option value="Bizhub C30P">Bizhub C30P</option>
-                            <option value="Bizhub C31P">Bizhub C31P</option>
-                            <option value="Bizhub C35">Bizhub C35</option>
-                            <option value="Bizhub C35P">Bizhub C35P</option>
-                            <option value="Bizhub C3100P">Bizhub C3100P</option>
-                            <option value="Bizhub C3110">Bizhub C3110</option>
-                            <option value="Bizhub C3300i">Bizhub C3300i</option>
-                            <option value="Bizhub C3320i">Bizhub C3320i</option>
-                            <option value="Bizhub C3350">Bizhub C3350</option>
-                            <option value="Bizhub C3350i">Bizhub C3350i</option>
-                            <option value="Bizhub C3351">Bizhub C3351</option>
-                            <option value="Bizhub C3850">Bizhub C3850</option>
-                            <option value="Bizhub C3850FS">Bizhub C3850FS</option>
-                            <option value="Bizhub C3851">Bizhub C3851</option>
-                            <option value="Bizhub C3851FS">Bizhub C3851FS</option>
-                            <option value="Bizhub C4000i">Bizhub C4000i</option>
-                            <option value="Bizhub C4050i">Bizhub C4050i</option>
-                            <option value="Bizhub C4051i">Bizhub C4051i</option>
+                            <option>Bizhub C10</option>
+                            <option>Bizhub C20</option>
+                            <option>Bizhub C25</option>
+                            <option>Bizhub C30P</option>
+                            <option>Bizhub C31P</option>
+                            <option>Bizhub C35</option>
+                            <option>Bizhub C35P</option>
+                            <option>Bizhub C3100P</option>
+                            <option>Bizhub C3110</option>
+                            <option>Bizhub C3300i</option>
+                            <option>Bizhub C3320i</option>
+                            <option>Bizhub C3350</option>
+                            <option>Bizhub C3350i</option>
+                            <option>Bizhub C3351</option>
+                            <option>Bizhub C3850</option>
+                            <option>Bizhub C3850FS</option>
+                            <option>Bizhub C3851</option>
+                            <option>Bizhub C3851FS</option>
+                            <option>Bizhub C4000i</option>
+                            <option>Bizhub C4050i</option>
+                            <option>Bizhub C4051i</option>
                         </optgroup>
 
                         <optgroup label="Linha Pro - Bizhub PRO / PRESS">
-                            <option value="Bizhub PRO C500">Bizhub PRO C500</option>
-                            <option value="Bizhub PRO C5500">Bizhub PRO C5500</option>
-                            <option value="Bizhub PRO C6000">Bizhub PRO C6000</option>
-                            <option value="Bizhub PRO C7000">Bizhub PRO C7000</option>
-                            <option value="Bizhub PRO C8000">Bizhub PRO C8000</option>
+                            <option>Bizhub PRO C500</option>
+                            <option>Bizhub PRO C5500</option>
+                            <option>Bizhub PRO C6000</option>
+                            <option>Bizhub PRO C7000</option>
+                            <option>Bizhub PRO C8000</option>
+                            <option>Bizhub PRESS C6000</option>
+                            <option>Bizhub PRESS C7000</option>
+                            <option>Bizhub PRESS C7000P</option>
+                            <option>Bizhub PRESS C1060</option>
+                            <option>Bizhub PRESS C1070</option>
+                            <option>Bizhub PRESS C1070P</option>
+                            <option>Bizhub PRESS C1085</option>
+                            <option>Bizhub PRESS C1100</option>
                         </optgroup>
 
+                        <optgroup label="Linha Pro - Accurio">
+                            <option>AccurioPrint C2060L</option>
+                            <option>AccurioPrint C3070L</option>
+                            <option>AccurioPrint C4065</option>
+                            <option>AccurioPress C2060</option>
+                            <option>AccurioPress C2070</option>
+                            <option>AccurioPress C2070P</option>
+                            <option>AccurioPress C3070</option>
+                            <option>AccurioPress C3070P</option>
+                            <option>AccurioPress C3080</option>
+                            <option>AccurioPress C3080P</option>
+                            <option>AccurioPress C4070</option>
+                            <option>AccurioPress C4080</option>
+                            <option>AccurioPress C5070</option>
+                            <option>AccurioPress C5080</option>
+                            <option>AccurioPress C6085</option>
+                            <option>AccurioPress C6100</option>
+                            <option>AccurioPress C7090</option>
+                            <option>AccurioPress C7100</option>
+                            <option>AccurioPress C12000</option>
+                            <option>AccurioPress C14000</option>
+                        </optgroup>
                     </select>
                 </label>
-
                 <label>
-                    Número de série
-                    <input type="text" name="numero_serie" value="{{ relatorio.get('numero_serie','') }}">
+                    Numero de serie
+                    <input type="text" name="numero_serie">
                 </label>
-
                 <label>
                     Contador geral
-                    <input type="text" name="contador_geral" value="{{ relatorio.get('contador_geral','') }}">
+                    <input type="text" name="contador_geral">
                 </label>
-
             </div>
         </div>
 
-        <!-- ========================= -->
-        <!-- ATENDIMENTO -->
-        <!-- ========================= -->
-
         <div class="form-section">
-
-            <h3>Atendimento técnico</h3>
-
+            <h3>Atendimento tecnico</h3>
             <div class="grid">
-
                 <label>
                     Hora inicial
-                    <input type="time" name="hora_inicio" value="{{ relatorio.get('hora_inicio','') }}">
+                    <input type="time" name="hora_inicio">
                 </label>
-
                 <label>
                     Hora final
-                    <input type="time" name="hora_fim" value="{{ relatorio.get('hora_fim','') }}">
+                    <input type="time" name="hora_fim">
                 </label>
-
                 <label class="campo-largo">
-                    Defeito relatado *
-                    <textarea name="defeito_relatado" required>{{ relatorio.get('defeito_relatado','') }}</textarea>
+                    Defeito relatado
+                    <textarea name="defeito_relatado"></textarea>
                 </label>
-
                 <label class="campo-largo">
-                    Diagnóstico *
-                    <textarea name="diagnostico" required>{{ relatorio.get('diagnostico','') }}</textarea>
+                    Diagnostico
+                    <textarea name="diagnostico"></textarea>
                 </label>
-
                 <label class="campo-largo">
-                    Serviço executado *
-                    <textarea name="servico_executado" required>{{ relatorio.get('servico_executado','') }}</textarea>
+                    Servico executado
+                    <textarea name="servico_executado"></textarea>
                 </label>
-
                 <label class="campo-largo">
-                    Peças
-                    <textarea name="pecas">{{ relatorio.get('pecas','') }}</textarea>
+                    Pecas
+                    <textarea name="pecas"></textarea>
                 </label>
-
             </div>
         </div>
 
-        <!-- ========================= -->
-        <!-- CONCLUSÃO -->
-        <!-- ========================= -->
-
         <div class="form-section">
-
-            <h3>Conclusão</h3>
-
+            <h3>Conclusao</h3>
             <div class="grid">
-
                 <label>
-                    Status *
-                    <select name="status" required>
-                        <option value="Concluído" {% if relatorio.get("status") == "Concluído" %}selected{% endif %}>Concluído</option>
-                        <option value="Pendente" {% if relatorio.get("status") == "Pendente" %}selected{% endif %}>Pendente</option>
-                        <option value="Aguardando peça" {% if relatorio.get("status") == "Aguardando peça" %}selected{% endif %}>Aguardando peça</option>
-                        <option value="Retorno necessário" {% if relatorio.get("status") == "Retorno necessário" %}selected{% endif %}>Retorno necessário</option>
+                    Status
+                    <select name="status">
+                        <option value="Concluido">Concluido</option>
+                        <option value="Pendente">Pendente</option>
+                        <option value="Aguardando peca">Aguardando peca</option>
+                        <option value="Retorno necessario">Retorno necessario</option>
                     </select>
                 </label>
-
                 <label>
-                    Técnico *
-                    <input type="text" name="tecnico" value="{{ relatorio.get('tecnico','') }}" required>
+                    Tecnico
+                    <input type="text" name="tecnico">
                 </label>
-
                 <label class="campo-largo">
-                    Observações finais
-                    <textarea name="observacoes">{{ relatorio.get('observacoes','') }}</textarea>
+                    Observacoes finais
+                    <textarea name="observacoes"></textarea>
                 </label>
-
             </div>
         </div>
 
         <div class="form-actions">
-            <button type="submit">Salvar alterações</button>
+            <button type="submit">Salvar relatorio</button>
         </div>
-
     </form>
 </section>
-
-<script>
-    document.querySelectorAll(".somente-numeros").forEach((campo) => {
-        campo.addEventListener("input", () => {
-            campo.value = campo.value.replace(/\D/g, "");
-        });
-    });
-
-    const selectModelo = document.querySelector('select[name="equipamento"]');
-
-    if (selectModelo) {
-        const modeloAtual = selectModelo.dataset.modeloAtual;
-
-        if (modeloAtual) {
-            const existeNaLista = Array.from(selectModelo.options)
-                .some(option => option.value === modeloAtual);
-
-            if (existeNaLista) {
-                selectModelo.value = modeloAtual;
-            } else {
-                const optionAtual = document.createElement("option");
-                optionAtual.value = modeloAtual;
-                optionAtual.textContent = "Modelo atual não listado: " + modeloAtual;
-                optionAtual.selected = true;
-
-                selectModelo.insertBefore(optionAtual, selectModelo.children[1]);
-            }
-        }
-    }
-</script>
-
 {% endblock %}
