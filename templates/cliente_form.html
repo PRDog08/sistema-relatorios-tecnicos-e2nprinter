@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+
+{% block conteudo %}
+<section class="card">
+    <div class="cabecalho-painel">
+        <div>
+            <h2>{% if cliente %}Editar cliente{% else %}Novo cliente{% endif %}</h2>
+            <p>Os dados cadastrados poderao ser usados no preenchimento de novos relatorios.</p>
+        </div>
+
+        <a class="botao-secundario" href="{{ url_for('listar_clientes') }}">Voltar aos clientes</a>
+    </div>
+
+    <form
+        action="{% if cliente %}{{ url_for('editar_cliente', cliente_id=cliente.id) }}{% else %}{{ url_for('criar_cliente') }}{% endif %}"
+        method="POST"
+        class="formulario"
+    >
+        <div class="form-section">
+            <h3>Dados da empresa</h3>
+            <div class="grid">
+                <label class="campo-largo">
+                    Empresa *
+                    <input type="text" name="empresa" required maxlength="200" value="{{ cliente.empresa if cliente else '' }}">
+                </label>
+                <label>
+                    Responsavel
+                    <input type="text" name="responsavel" maxlength="200" value="{{ cliente.responsavel if cliente else '' }}">
+                </label>
+                <label>
+                    Telefone
+                    <input type="text" name="telefone" inputmode="tel" maxlength="20" placeholder="(00) 00000-0000" value="{{ cliente.telefone if cliente else '' }}">
+                </label>
+                <label>
+                    E-mail
+                    <input type="email" name="email" maxlength="150" value="{{ cliente.email if cliente else '' }}">
+                </label>
+                <label>
+                    CNPJ
+                    <input type="text" name="cnpj" inputmode="numeric" maxlength="18" placeholder="00.000.000/0000-00" value="{{ cliente.cnpj if cliente else '' }}">
+                </label>
+            </div>
+        </div>
+
+        <div class="form-section">
+            <h3>Endereco</h3>
+            <div class="grid">
+                <label class="campo-largo">
+                    Endereco
+                    <input type="text" name="endereco" maxlength="200" value="{{ cliente.endereco if cliente else '' }}">
+                </label>
+                <label>
+                    Bairro
+                    <input type="text" name="bairro" maxlength="100" value="{{ cliente.bairro if cliente else '' }}">
+                </label>
+                <label>
+                    Cidade
+                    <input type="text" name="cidade" maxlength="100" value="{{ cliente.cidade if cliente else '' }}">
+                </label>
+                <label>
+                    CEP
+                    <input type="text" name="cep" inputmode="numeric" maxlength="9" placeholder="00000-000" value="{{ cliente.cep if cliente else '' }}">
+                </label>
+                <label>
+                    UF
+                    <input type="text" name="uf" maxlength="2" placeholder="SP" value="{{ cliente.uf if cliente else '' }}">
+                </label>
+            </div>
+        </div>
+
+        <div class="form-section">
+            <h3>Observacoes</h3>
+            <div class="grid">
+                <label class="campo-largo">
+                    Observacoes internas
+                    <textarea name="observacoes">{{ cliente.observacoes if cliente else '' }}</textarea>
+                </label>
+            </div>
+        </div>
+
+        <div class="form-actions">
+            <button type="submit">{% if cliente %}Salvar alteracoes{% else %}Cadastrar cliente{% endif %}</button>
+        </div>
+    </form>
+</section>
+{% endblock %}

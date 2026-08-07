@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+
+{% block conteudo %}
+<section class="card">
+    <div class="cabecalho-painel">
+        <div>
+            <h2>Cadastro de clientes</h2>
+            <p>Gerencie os dados usados para preencher os novos relatorios.</p>
+        </div>
+
+        <a class="botao-secundario" href="{{ url_for('criar_cliente') }}">Novo cliente</a>
+    </div>
+
+    <form method="GET" action="{{ url_for('listar_clientes') }}" class="busca">
+        <input
+            type="search"
+            name="busca"
+            placeholder="Buscar por empresa, responsavel, telefone, CNPJ ou cidade"
+            value="{{ busca }}"
+        >
+        <button type="submit">Buscar</button>
+    </form>
+
+    {% if clientes %}
+        <div class="lista-relatorios">
+            {% for cliente in clientes %}
+                <article class="item-relatorio item-relatorio-pro">
+                    <div class="info-relatorio">
+                        <div class="linha-titulo">
+                            <h3>{{ cliente.empresa }}</h3>
+                            {% if cliente.cnpj %}
+                                <span class="status">CNPJ {{ cliente.cnpj }}</span>
+                            {% endif %}
+                        </div>
+
+                        <div class="detalhes-relatorio">
+                            <p><strong>Responsavel:</strong> {{ cliente.responsavel or "-" }}</p>
+                            <p><strong>Telefone:</strong> {{ cliente.telefone or "-" }}</p>
+                            <p><strong>E-mail:</strong> {{ cliente.email or "-" }}</p>
+                            <p><strong>Cidade/UF:</strong> {{ cliente.cidade or "-" }}{% if cliente.uf %}/{{ cliente.uf }}{% endif %}</p>
+                            <p><strong>Endereco:</strong> {{ cliente.endereco or "-" }}</p>
+                            <p><strong>Atualizado em:</strong> {{ cliente.updated_at.strftime("%d/%m/%Y %H:%M") if cliente.updated_at else "-" }}</p>
+                        </div>
+                    </div>
+
+                    <div class="acoes-card">
+                        <a class="botao-outline" href="{{ url_for('editar_cliente', cliente_id=cliente.id) }}">Editar</a>
+
+                        <form action="{{ url_for('excluir_cliente', cliente_id=cliente.id) }}" method="POST" onsubmit="return confirm('Tem certeza que deseja excluir este cliente?');">
+                            <button type="submit" class="botao-perigo">Excluir</button>
+                        </form>
+                    </div>
+                </article>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="estado-vazio">
+            <h3>Nenhum cliente encontrado</h3>
+            <p>Cadastre um cliente para agilizar o preenchimento dos relatorios.</p>
+            <a class="botao-secundario" href="{{ url_for('criar_cliente') }}">Cadastrar cliente</a>
+        </div>
+    {% endif %}
+</section>
+{% endblock %}

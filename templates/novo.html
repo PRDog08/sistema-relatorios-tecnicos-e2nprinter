@@ -15,10 +15,22 @@
         <div class="form-section">
             <h3>Dados do cliente</h3>
             <div class="grid">
-                <label>
-                    Cliente *
-                    <input type="text" name="cliente" required>
-                </label>
+                <div class="campo-autocomplete campo-largo">
+                    <label for="cliente">Buscar cliente cadastrado</label>
+                    <div class="autocomplete-cliente">
+                        <input
+                            id="cliente"
+                            type="text"
+                            name="cliente"
+                            autocomplete="off"
+                            placeholder="Digite ao menos 2 caracteres para buscar"
+                            required
+                        >
+                        <input id="cliente-id" type="hidden" name="cliente_id">
+                        <div id="sugestoes-clientes" class="sugestoes-clientes" role="listbox"></div>
+                    </div>
+                    <small class="ajuda-campo">Ao selecionar um cliente, os dados de identificacao abaixo serao preenchidos e poderao ser editados.</small>
+                </div>
                 <label>
                     Responsavel
                     <input type="text" name="responsavel">
@@ -251,4 +263,133 @@
         </div>
     </form>
 </section>
+
+<script>
+    const campoCliente = document.getElementById("cliente");
+    const campoClienteId = document.getElementById("cliente-id");
+    const sugestoesClientes = document.getElementById("sugestoes-clientes");
+    const apiClientesUrl = "{{ url_for('api_clientes') }}";
+    let temporizadorBusca;
+    let ultimaBusca = 0;
+
+    function limparSugestoes() {
+        sugestoesClientes.replaceChildren();
+        sugestoesClientes.hidden = true;
+    }
+
+    function descricaoCliente(cliente) {
+        const local = [cliente.cidade, cliente.uf].filter(Boolean).join("/");
+        return [cliente.responsavel, local, cliente.cnpj ? "CNPJ " + cliente.cnpj : ""]
+            .filter(Boolean)
+            .join(" - ");
+    }
+
+    function mostrarSugestoes(clientes) {
+        sugestoesClientes.replaceChildren();
+
+        clientes.forEach((cliente) => {
+            const botao = document.createElement("button");
+            botao.type = "button";
+            botao.className = "sugestao-cliente";
+            botao.setAttribute("role", "option");
+
+            const empresa = document.createElement("strong");
+            empresa.textContent = cliente.empresa;
+            botao.appendChild(empresa);
+
+            const descricao = descricaoCliente(cliente);
+            if (descricao) {
+                const detalhes = document.createElement("span");
+                detalhes.textContent = descricao;
+                botao.appendChild(detalhes);
+            }
+
+            botao.addEventListener("click", () => selecionarCliente(cliente.id));
+            sugestoesClientes.appendChild(botao);
+        });
+
+        sugestoesClientes.hidden = clientes.length === 0;
+    }
+
+    function preencherIdentificacao(cliente) {
+        const campos = {
+            cliente: cliente.empresa,
+            responsavel: cliente.responsavel,
+            telefone: cliente.telefone,
+            endereco: cliente.endereco,
+            bairro: cliente.bairro,
+            cidade: cliente.cidade,
+            cep: cliente.cep,
+            uf: cliente.uf,
+        };
+
+        Object.entries(campos).forEach(([nome, valor]) => {
+            const campo = document.querySelector(`[name="${nome}"]`);
+            if (campo) {
+                campo.value = valor || "";
+            }
+        });
+    }
+
+    async function selecionarCliente(clienteId) {
+        try {
+            const resposta = await fetch(`${apiClientesUrl}/${clienteId}`, {
+                headers: { "Accept": "application/json" },
+            });
+
+            if (!resposta.ok) {
+                throw new Error("Nao foi possivel carregar o cliente.");
+            }
+
+            const cliente = await resposta.json();
+            preencherIdentificacao(cliente);
+            campoClienteId.value = cliente.id;
+            limparSugestoes();
+        } catch (erro) {
+            console.error(erro);
+        }
+    }
+
+    campoCliente.addEventListener("input", () => {
+        campoClienteId.value = "";
+        window.clearTimeout(temporizadorBusca);
+
+        const termo = campoCliente.value.trim();
+        if (termo.length < 2) {
+            limparSugestoes();
+            return;
+        }
+
+        const buscaAtual = ++ultimaBusca;
+        temporizadorBusca = window.setTimeout(async () => {
+            try {
+                const resposta = await fetch(`${apiClientesUrl}?q=${encodeURIComponent(termo)}`, {
+                    headers: { "Accept": "application/json" },
+                });
+
+                if (!resposta.ok) {
+                    throw new Error("Nao foi possivel buscar clientes.");
+                }
+
+                const clientes = await resposta.json();
+                if (buscaAtual === ultimaBusca) {
+                    mostrarSugestoes(clientes);
+                }
+            } catch (erro) {
+                console.error(erro);
+                limparSugestoes();
+            }
+        }, 250);
+    });
+
+    campoCliente.addEventListener("blur", () => {
+        window.setTimeout(limparSugestoes, 150);
+    });
+
+    campoCliente.addEventListener("keydown", (evento) => {
+        if (evento.key === "Escape") {
+            limparSugestoes();
+        }
+    });
+</script>
 {% endblock %}
