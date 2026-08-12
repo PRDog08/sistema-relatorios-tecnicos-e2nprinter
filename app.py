@@ -11,14 +11,21 @@ from sqlalchemy import or_
 
 
 app = Flask(__name__)
+
 app.secret_key = os.getenv("SECRET_KEY", "troque-esta-chave-em-producao")
 
 database_url = os.getenv("DATABASE_URL", "sqlite:///relatorios.db")
+
 if database_url.startswith("postgres://"):
     database_url = database_url.replace("postgres://", "postgresql://", 1)
 
 app.config["SQLALCHEMY_DATABASE_URI"] = database_url
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+
+app.config["SQLALCHEMY_ENGINE_OPTIONS"] = {
+    "pool_pre_ping": True,
+    "pool_recycle": 300,
+}
 
 db = SQLAlchemy(app)
 app.db_initialized = False
