@@ -41,7 +41,9 @@
         status.textContent = "Buscando endereco...";
 
         try {
-            const resposta = await fetch(`https://viacep.com.br/ws/${cep}/json/`);
+            const resposta = await fetch(`/api/cep/${cep}`, {
+                headers: { "Accept": "application/json" },
+            });
             if (!resposta.ok) {
                 throw new Error("Falha ao consultar o CEP.");
             }

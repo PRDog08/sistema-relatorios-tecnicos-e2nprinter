@@ -1,6 +1,9 @@
+import json
 import os
 import re
 from datetime import datetime
+from urllib.error import URLError
+from urllib.request import urlopen
 
 from flask import Flask, jsonify, redirect, render_template, request, session, url_for
 from flask_sqlalchemy import SQLAlchemy
@@ -404,6 +407,25 @@ def api_cliente(cliente_id):
 
     cliente = Cliente.query.get_or_404(cliente_id)
     return jsonify(cliente.para_json())
+
+
+@app.route("/api/cep/<cep>")
+def api_cep(cep):
+    bloqueio = exigir_login()
+    if bloqueio:
+        return bloqueio
+
+    cep = apenas_numeros(cep)
+    if not re.fullmatch(r"\d{8}", cep):
+        return jsonify({"erro": True, "mensagem": "CEP invalido."}), 400
+
+    try:
+        with urlopen(f"https://viacep.com.br/ws/{cep}/json/", timeout=5) as resposta:
+            dados = json.load(resposta)
+    except (URLError, ValueError, OSError):
+        return jsonify({"erro": True, "mensagem": "Nao foi possivel consultar o CEP."}), 502
+
+    return jsonify(dados)
 
 
 @app.route("/novo")
