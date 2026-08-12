@@ -118,6 +118,13 @@ def apenas_numeros(texto):
     return re.sub(r"\D", "", texto or "")
 
 
+def formatar_cep(texto):
+    cep = apenas_numeros(texto)[:8]
+    if len(cep) == 8:
+        return f"{cep[:5]}-{cep[5:]}"
+    return cep
+
+
 def dados_cliente(form):
     return {
         "empresa": clean(form.get("empresa")),
@@ -127,7 +134,7 @@ def dados_cliente(form):
         "endereco": clean(form.get("endereco")),
         "bairro": clean(form.get("bairro")),
         "cidade": clean(form.get("cidade")),
-        "cep": apenas_numeros(form.get("cep")),
+        "cep": formatar_cep(form.get("cep")),
         "uf": clean(form.get("uf")).upper(),
         "cnpj": apenas_numeros(form.get("cnpj")),
         "observacoes": clean(form.get("observacoes")),
@@ -141,7 +148,7 @@ def validar_cliente(dados):
     if dados["telefone"] and not re.fullmatch(r"\d{10,11}", dados["telefone"]):
         return "Telefone invalido. Informe 10 ou 11 numeros com DDD."
 
-    if dados["cep"] and not re.fullmatch(r"\d{8}", dados["cep"]):
+    if dados["cep"] and not re.fullmatch(r"\d{8}", apenas_numeros(dados["cep"])):
         return "CEP invalido. Informe 8 numeros."
 
     if dados["uf"] and not re.fullmatch(r"[A-Z]{2}", dados["uf"]):
@@ -184,7 +191,7 @@ def validar_relatorio(form):
     cliente = clean(form.get("cliente"))
     telefone = clean(form.get("telefone"))
     equipamento = clean(form.get("equipamento") or form.get("modelo"))
-    cep = clean(form.get("cep"))
+    cep = apenas_numeros(form.get("cep"))
 
     if not cliente:
         return "Cliente obrigatorio"
@@ -425,7 +432,7 @@ def criar_relatorio():
         responsavel=clean(request.form.get("responsavel")),
         telefone=clean(request.form.get("telefone")),
         endereco=clean(request.form.get("endereco")),
-        cep=clean(request.form.get("cep")),
+        cep=formatar_cep(request.form.get("cep")),
         cidade=clean(request.form.get("cidade")),
         bairro=clean(request.form.get("bairro")),
         uf=clean(request.form.get("uf")).upper(),
@@ -469,7 +476,7 @@ def editar_relatorio(relatorio_id):
         relatorio.responsavel = clean(request.form.get("responsavel"))
         relatorio.telefone = clean(request.form.get("telefone"))
         relatorio.endereco = clean(request.form.get("endereco"))
-        relatorio.cep = clean(request.form.get("cep"))
+        relatorio.cep = formatar_cep(request.form.get("cep"))
         relatorio.cidade = clean(request.form.get("cidade"))
         relatorio.bairro = clean(request.form.get("bairro"))
         relatorio.uf = clean(request.form.get("uf")).upper()

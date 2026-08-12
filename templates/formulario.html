@@ -47,9 +47,10 @@
                         name="cep"
                         value="{{ relatorio['cep'] or '' }}"
                         inputmode="numeric"
-                        pattern="[0-9]*"
-                        maxlength="8"
+                        pattern="[0-9]{5}-[0-9]{3}"
+                        maxlength="9"
                         class="somente-numeros"
+                        autocomplete="postal-code"
                         placeholder="Somente números"
                     >
                 </label>

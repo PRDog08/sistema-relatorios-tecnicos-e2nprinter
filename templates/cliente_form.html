@@ -59,7 +59,7 @@
                 </label>
                 <label>
                     CEP
-                    <input type="text" name="cep" inputmode="numeric" maxlength="9" placeholder="00000-000" value="{{ cliente.cep if cliente else '' }}">
+                    <input type="text" name="cep" inputmode="numeric" pattern="[0-9]{5}-[0-9]{3}" maxlength="9" placeholder="00000-000" autocomplete="postal-code" value="{{ cliente.cep if cliente else '' }}">
                 </label>
                 <label>
                     UF

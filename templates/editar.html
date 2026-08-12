@@ -29,7 +29,7 @@
                 </label>
                 <label>
                     CEP
-                    <input type="text" name="cep" inputmode="numeric" pattern="[0-9]{8}" maxlength="8" value="{{ relatorio.cep or '' }}">
+                    <input type="text" name="cep" inputmode="numeric" pattern="[0-9]{5}-[0-9]{3}" maxlength="9" placeholder="00000-000" autocomplete="postal-code" value="{{ relatorio.cep or '' }}">
                 </label>
             </div>
         </div>
