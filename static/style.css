@@ -224,6 +224,74 @@ textarea {
     line-height: 1.4;
 }
 
+.pecas-editor {
+    min-width: 0;
+}
+
+.pecas-editor-cabecalho {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 14px;
+}
+
+.pecas-editor-cabecalho h4 {
+    margin: 0 0 5px;
+    color: var(--text);
+}
+
+.pecas-editor-cabecalho .ajuda-campo {
+    display: block;
+}
+
+.pecas-editor .botao-adicionar-peca,
+.pecas-editor .botao-remover-peca {
+    width: auto;
+    min-height: 40px;
+    margin: 0;
+    padding: 9px 12px;
+    white-space: nowrap;
+}
+
+.pecas-editor .botao-remover-peca {
+    border-color: var(--danger-border);
+    background: var(--danger-soft);
+    color: #ffd8d5;
+    box-shadow: none;
+}
+
+.pecas-editor button:disabled {
+    cursor: not-allowed;
+    opacity: 0.55;
+    transform: none;
+}
+
+.pecas-lista {
+    display: grid;
+    gap: 10px;
+}
+
+.peca-item {
+    display: grid;
+    grid-template-columns: minmax(125px, 0.8fr) minmax(85px, 0.45fr) minmax(200px, 2fr) minmax(140px, 1.1fr) auto;
+    align-items: end;
+    gap: 12px;
+    padding: 12px;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    background: rgba(0, 0, 0, 0.12);
+}
+
+.peca-item label {
+    min-width: 0;
+}
+
+.peca-item input,
+.peca-item select {
+    min-width: 0;
+}
+
 .autocomplete-cliente {
     position: relative;
     width: 100%;
@@ -703,45 +771,79 @@ button:hover,
     font-size: 13px !important;
 }
 
+.rat-contador-anterior {
+    top: 132.5mm !important;
+    left: 153mm !important;
+    width: 48mm !important;
+    height: 7mm !important;
+    text-align: center !important;
+    font-size: 13px !important;
+}
+
 /* Serviços */
 
 .rat-motivo {
     top: 132.5mm !important;
     left: 19mm !important;
-    width: 145mm !important;
+    width: 130mm !important;
     height: 7mm !important;
     font-size: 12.5px !important;
     line-height: 1.15 !important;
 }
 
 .rat-diagnostico {
-    top: 146mm !important;
-    left: 6mm !important;
-    width: 180mm !important;
-    height: 18mm !important;
-    font-size: 15px !important;
-    line-height: 1.25 !important;
-    font-weight: 700 !important;
-}
-
-.rat-servico-executado {
-    top: 155mm !important;
-    left: 6mm !important;
-    width: 157.9mm !important;
-    height: 34mm !important;
+    top: 139.5mm !important;
+    left: 5mm !important;
+    width: 200mm !important;
+    height: 49mm !important;
     font-size: 13px !important;
     line-height: 1.25 !important;
     font-weight: 700 !important;
 }
 
-.rat-pecas {
-    top: 202mm !important;
-    left: 31mm !important;
-    width: 122mm !important;
-    height: 26mm !important;
-    font-size: 12px !important;
-    line-height: 1.25 !important;
-    font-weight: 700 !important;
+.rat-pecas-linhas {
+    top: 198.5mm !important;
+    left: 2.9mm !important;
+    width: 202.3mm !important;
+    height: 61mm !important;
+    display: grid !important;
+    grid-template-rows: repeat(8, 1fr) !important;
+    font-size: 10.5px !important;
+    font-weight: 600 !important;
+    line-height: 1 !important;
+}
+
+.rat-peca-linha {
+    display: grid;
+    grid-template-columns: 12.4mm 13.3mm 121.4mm 55.2mm;
+    min-width: 0;
+    align-items: center;
+}
+
+.rat-peca-linha span {
+    min-width: 0;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+.rat-peca-status,
+.rat-peca-quantidade,
+.rat-peca-codigo {
+    text-align: center;
+}
+
+.rat-peca-descricao {
+    padding: 0 1.5mm;
+}
+
+.rat-pecas-legadas {
+    top: 198.5mm !important;
+    left: 28.6mm !important;
+    width: 120mm !important;
+    height: 61mm !important;
+    font-size: 10.5px !important;
+    line-height: 1.15 !important;
+    font-weight: 600 !important;
 }
 
 /* Técnico / assinatura */
@@ -755,6 +857,27 @@ button:hover,
     font-weight: 700 !important;
     font-size: 12px !important;
     color: #000000 !important;
+}
+
+@media screen and (max-width: 700px) {
+    .pecas-editor-cabecalho {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .peca-item {
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    }
+
+    .peca-item label:nth-of-type(3),
+    .peca-item label:nth-of-type(4),
+    .pecas-editor .botao-remover-peca {
+        grid-column: 1 / -1;
+    }
+
+    .pecas-editor .botao-adicionar-peca {
+        width: 100%;
+    }
 }
 
 .rat-numero-rat {

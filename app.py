@@ -7,7 +7,7 @@ from urllib.request import urlopen
 
 from flask import Flask, jsonify, redirect, render_template, request, session, url_for
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy import or_
+from sqlalchemy import func, or_
 
 
 app = Flask(__name__)
@@ -216,6 +216,89 @@ def validar_relatorio(form):
         return "Equipamento/modelo obrigatorio"
 
     return None
+
+
+PECAS_SCHEMA = "e2nprinter-pecas-v1"
+
+
+def ler_pecas(valor):
+    """Retorna as peças estruturadas e preserva os textos antigos como legado."""
+    if not valor:
+        return {"itens": [], "legado": ""}
+
+    try:
+        dados = json.loads(valor)
+    except (TypeError, ValueError):
+        dados = None
+
+    if isinstance(dados, dict) and dados.get("schema") == PECAS_SCHEMA:
+        itens = dados.get("itens") or []
+        return {
+            "itens": [
+                {
+                    "status": clean(item.get("status")) if isinstance(item, dict) else "",
+                    "quantidade": clean(item.get("quantidade")) if isinstance(item, dict) else "",
+                    "descricao": clean(item.get("descricao")) if isinstance(item, dict) else "",
+                    "codigo": clean(item.get("codigo")) if isinstance(item, dict) else "",
+                }
+                for item in itens
+                if isinstance(item, dict)
+            ],
+            "legado": "",
+        }
+
+    texto = clean(valor)
+    if texto.casefold().rstrip(".") in {"nenhuma peca informada", "nenhuma peça informada"}:
+        return {"itens": [], "legado": ""}
+    return {"itens": [], "legado": texto}
+
+
+def salvar_pecas(form):
+    nomes = ("peca_status", "peca_quantidade", "peca_descricao", "peca_codigo")
+    listas = [form.getlist(nome) for nome in nomes]
+    quantidade_linhas = min(max((len(lista) for lista in listas), default=0), 8)
+    itens = []
+
+    for indice in range(quantidade_linhas):
+        valores = [clean(lista[indice]) if indice < len(lista) else "" for lista in listas]
+        item = {
+            "status": valores[0] if valores[0] in {"A", "T", "E"} else "",
+            "quantidade": valores[1],
+            "descricao": valores[2],
+            "codigo": valores[3],
+        }
+        if any(item.values()):
+            itens.append(item)
+
+    if not itens:
+        return ""
+    return json.dumps({"schema": PECAS_SCHEMA, "itens": itens}, ensure_ascii=False)
+
+
+def codigos_pecas_utilizados():
+    codigos = set()
+    for (valor,) in db.session.query(Relatorio.pecas).filter(Relatorio.pecas.isnot(None)).all():
+        for item in ler_pecas(valor)["itens"]:
+            codigo = item["codigo"].strip()
+            if codigo:
+                codigos.add(codigo)
+    return sorted(codigos, key=str.casefold)
+
+
+def buscar_contador_anterior(numero_serie, antes_id=None):
+    serie = clean(numero_serie)
+    if not serie:
+        return ""
+
+    consulta = Relatorio.query.filter(
+        func.lower(func.trim(Relatorio.numero_serie)) == serie.casefold(),
+        Relatorio.contador_geral.isnot(None),
+        func.trim(Relatorio.contador_geral) != "",
+    )
+    if antes_id is not None:
+        consulta = consulta.filter(Relatorio.id < antes_id)
+    anterior = consulta.order_by(Relatorio.id.desc()).first()
+    return anterior.contador_geral if anterior else ""
 
 
 @app.context_processor
@@ -435,6 +518,19 @@ def api_cep(cep):
     return jsonify(dados)
 
 
+@app.route("/api/contador-anterior")
+def api_contador_anterior():
+    bloqueio = exigir_login()
+    if bloqueio:
+        return bloqueio
+
+    numero_serie = request.args.get("numero_serie", "")
+    relatorio_id = request.args.get("relatorio_id", type=int)
+    return jsonify({
+        "contador_anterior": buscar_contador_anterior(numero_serie, antes_id=relatorio_id)
+    })
+
+
 @app.route("/novo")
 @app.route("/relatorio/novo")
 @app.route("/novo_relatorio")
@@ -443,7 +539,11 @@ def novo_relatorio():
     if bloqueio:
         return bloqueio
 
-    return render_template("novo.html")
+    return render_template(
+        "novo.html",
+        contador_anterior="",
+        codigos_pecas=codigos_pecas_utilizados(),
+    )
 
 
 @app.route("/criar_relatorio", methods=["POST"])
@@ -474,7 +574,7 @@ def criar_relatorio():
         defeito_relatado=clean(request.form.get("defeito_relatado") or request.form.get("descricao")),
         diagnostico=clean(request.form.get("diagnostico") or request.form.get("solucao")),
         servico_executado=clean(request.form.get("servico_executado")),
-        pecas=clean(request.form.get("pecas")),
+        pecas=salvar_pecas(request.form),
         status=clean(request.form.get("status")) or "Concluido",
         tecnico=clean(request.form.get("tecnico")),
         observacoes=clean(request.form.get("observacoes")),
@@ -518,7 +618,7 @@ def editar_relatorio(relatorio_id):
         relatorio.defeito_relatado = clean(request.form.get("defeito_relatado") or request.form.get("descricao"))
         relatorio.diagnostico = clean(request.form.get("diagnostico") or request.form.get("solucao"))
         relatorio.servico_executado = clean(request.form.get("servico_executado"))
-        relatorio.pecas = clean(request.form.get("pecas"))
+        relatorio.pecas = salvar_pecas(request.form)
         relatorio.status = clean(request.form.get("status")) or "Concluido"
         relatorio.tecnico = clean(request.form.get("tecnico"))
         relatorio.observacoes = clean(request.form.get("observacoes"))
@@ -526,7 +626,18 @@ def editar_relatorio(relatorio_id):
         db.session.commit()
         return redirect(url_for("admin"))
 
-    return render_template("editar.html", relatorio=relatorio)
+    pecas = ler_pecas(relatorio.pecas)
+    itens_pecas = pecas["itens"]
+    if pecas["legado"]:
+        itens_pecas = [{"status": "", "quantidade": "", "descricao": pecas["legado"], "codigo": ""}]
+
+    return render_template(
+        "editar.html",
+        relatorio=relatorio,
+        itens_pecas=itens_pecas,
+        contador_anterior=buscar_contador_anterior(relatorio.numero_serie, antes_id=relatorio.id),
+        codigos_pecas=codigos_pecas_utilizados(),
+    )
 
 
 @app.route("/relatorio/<int:relatorio_id>")
@@ -537,7 +648,14 @@ def ver_relatorio(relatorio_id):
         return bloqueio
 
     relatorio = Relatorio.query.get_or_404(relatorio_id)
-    return render_template("relatorio.html", relatorio=relatorio)
+    pecas = ler_pecas(relatorio.pecas)
+    return render_template(
+        "relatorio.html",
+        relatorio=relatorio,
+        pecas_relatorio=pecas["itens"],
+        pecas_legadas=pecas["legado"],
+        contador_anterior=buscar_contador_anterior(relatorio.numero_serie, antes_id=relatorio.id),
+    )
 
 
 @app.route("/excluir/<int:relatorio_id>", methods=["POST"])

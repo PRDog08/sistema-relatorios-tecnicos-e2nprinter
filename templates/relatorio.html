@@ -24,10 +24,27 @@
         <div class="rat-campo rat-modelo">{{ relatorio.equipamento or "-" }}</div>
         <div class="rat-campo rat-serie">{{ relatorio.numero_serie or "-" }}</div>
         <div class="rat-campo rat-contador">{{ relatorio.contador_geral or "-" }}</div>
+        <div class="rat-campo rat-contador-anterior">{{ contador_anterior }}</div>
         <div class="rat-campo rat-motivo">{{ relatorio.defeito_relatado or "-" }}</div>
-        <div class="rat-campo rat-diagnostico">Diagnostico: {{ relatorio.diagnostico or "-" }}</div>
-        <div class="rat-campo rat-servico-executado">Servico executado: {{ relatorio.servico_executado or "-" }}</div>
-        <div class="rat-campo rat-pecas">{{ relatorio.pecas or "Nenhuma peca informada." }}</div>
+        <div class="rat-campo rat-diagnostico">
+            {% if relatorio.diagnostico %}<span>{{ relatorio.diagnostico }}</span>{% endif %}
+            {% if relatorio.diagnostico and relatorio.servico_executado %}<br>{% endif %}
+            {% if relatorio.servico_executado %}<span>{{ relatorio.servico_executado }}</span>{% endif %}
+        </div>
+        {% if pecas_legadas %}
+            <div class="rat-campo rat-pecas-legadas">{{ pecas_legadas }}</div>
+        {% else %}
+            <div class="rat-campo rat-pecas-linhas">
+                {% for item in pecas_relatorio[:8] %}
+                    <div class="rat-peca-linha">
+                        <span class="rat-peca-status">{{ item.status }}</span>
+                        <span class="rat-peca-quantidade">{{ item.quantidade }}</span>
+                        <span class="rat-peca-descricao">{{ item.descricao }}</span>
+                        <span class="rat-peca-codigo">{{ item.codigo }}</span>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
         <div class="rat-campo rat-tecnico">{{ relatorio.tecnico or "-" }}</div>
     </div>
 

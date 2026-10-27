@@ -183,12 +183,17 @@
                     </select>
                 </label>
                 <label>
-                    Numero de serie
-                    <input type="text" name="numero_serie" value="{{ relatorio.numero_serie or '' }}">
+                    Número de série
+                    <input type="text" name="numero_serie" id="numero-serie" value="{{ relatorio.numero_serie or '' }}">
                 </label>
                 <label>
-                    Contador geral
+                    Contador atual
                     <input type="text" name="contador_geral" value="{{ relatorio.contador_geral or '' }}">
+                </label>
+                <label>
+                    Cont. anterior (automático)
+                    <input type="text" id="contador-anterior" value="{{ contador_anterior or '' }}" readonly>
+                    <small class="ajuda-campo">Preenchido pelo último relatório com este número de série.</small>
                 </label>
             </div>
         </div>
@@ -216,10 +221,44 @@
                     Servico executado
                     <textarea name="servico_executado">{{ relatorio.servico_executado or '' }}</textarea>
                 </label>
-                <label class="campo-largo">
-                    Pecas
-                    <textarea name="pecas">{{ relatorio.pecas or '' }}</textarea>
-                </label>
+                <div class="campo-largo pecas-editor">
+                    <div class="pecas-editor-cabecalho">
+                        <div>
+                            <h4>Peças utilizadas ou recomendadas</h4>
+                            <small class="ajuda-campo">A = A trocar · T = Trocado · E = Entregue. Códigos usados antes aparecem como sugestão.</small>
+                        </div>
+                        <button type="button" class="botao-secundario botao-adicionar-peca" id="adicionar-peca">Adicionar peça</button>
+                    </div>
+                    <datalist id="codigos-pecas">
+                        {% for codigo in codigos_pecas %}
+                            <option value="{{ codigo }}"></option>
+                        {% endfor %}
+                    </datalist>
+                    <div class="pecas-lista" id="lista-pecas" data-max-rows="8">
+                        {% for item in (itens_pecas or [{}]) %}
+                            <div class="peca-item">
+                                <label>Status
+                                    <select name="peca_status">
+                                        <option value="" {% if not item.status %}selected{% endif %}>—</option>
+                                        <option value="A" {% if item.status == 'A' %}selected{% endif %}>A — A trocar</option>
+                                        <option value="T" {% if item.status == 'T' %}selected{% endif %}>T — Trocado</option>
+                                        <option value="E" {% if item.status == 'E' %}selected{% endif %}>E — Entregue</option>
+                                    </select>
+                                </label>
+                                <label>Qt.
+                                    <input type="number" name="peca_quantidade" min="0" step="1" value="{{ item.quantidade or '' }}">
+                                </label>
+                                <label>Descrição
+                                    <input type="text" name="peca_descricao" value="{{ item.descricao or '' }}">
+                                </label>
+                                <label>Cod.
+                                    <input type="text" name="peca_codigo" list="codigos-pecas" value="{{ item.codigo or '' }}" autocomplete="off">
+                                </label>
+                                <button type="button" class="botao-remover-peca" aria-label="Remover peça">Remover</button>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -251,7 +290,90 @@
     </form>
 </section>
 
+<template id="modelo-linha-peca">
+    <div class="peca-item">
+        <label>Status
+            <select name="peca_status">
+                <option value="" selected>—</option>
+                <option value="A">A — A trocar</option>
+                <option value="T">T — Trocado</option>
+                <option value="E">E — Entregue</option>
+            </select>
+        </label>
+        <label>Qt.
+            <input type="number" name="peca_quantidade" min="0" step="1">
+        </label>
+        <label>Descrição
+            <input type="text" name="peca_descricao">
+        </label>
+        <label>Cod.
+            <input type="text" name="peca_codigo" list="codigos-pecas" autocomplete="off">
+        </label>
+        <button type="button" class="botao-remover-peca" aria-label="Remover peça">Remover</button>
+    </div>
+</template>
+
 <script>
+    const listaPecas = document.getElementById("lista-pecas");
+    const modeloLinhaPeca = document.getElementById("modelo-linha-peca");
+    const botaoAdicionarPeca = document.getElementById("adicionar-peca");
+    const atualizarBotaoPeca = () => {
+        botaoAdicionarPeca.disabled = listaPecas.children.length >= Number(listaPecas.dataset.maxRows);
+    };
+
+    botaoAdicionarPeca.addEventListener("click", () => {
+        if (listaPecas.children.length < Number(listaPecas.dataset.maxRows)) {
+            listaPecas.appendChild(modeloLinhaPeca.content.cloneNode(true));
+            atualizarBotaoPeca();
+        }
+    });
+
+    listaPecas.addEventListener("click", (evento) => {
+        const botao = evento.target.closest(".botao-remover-peca");
+        if (!botao) return;
+
+        const linha = botao.closest(".peca-item");
+        if (listaPecas.children.length > 1) {
+            linha.remove();
+        } else {
+            linha.querySelectorAll("input").forEach((campo) => campo.value = "");
+            linha.querySelector("select").value = "";
+        }
+        atualizarBotaoPeca();
+    });
+    atualizarBotaoPeca();
+
+    const campoNumeroSerie = document.getElementById("numero-serie");
+    const campoContadorAnterior = document.getElementById("contador-anterior");
+    let temporizadorContador;
+    let consultaContadorAtual = 0;
+    campoNumeroSerie.addEventListener("input", () => {
+        window.clearTimeout(temporizadorContador);
+        campoContadorAnterior.value = "";
+        const consultaAtual = ++consultaContadorAtual;
+        temporizadorContador = window.setTimeout(async () => {
+            const numeroSerie = campoNumeroSerie.value.trim();
+            if (!numeroSerie) {
+                campoContadorAnterior.value = "";
+                return;
+            }
+            try {
+                const url = new URL("{{ url_for('api_contador_anterior') }}", window.location.origin);
+                url.searchParams.set("numero_serie", numeroSerie);
+                url.searchParams.set("relatorio_id", "{{ relatorio.id }}");
+                const resposta = await fetch(url, { headers: { "Accept": "application/json" } });
+                if (resposta.ok) {
+                    const dados = await resposta.json();
+                    if (consultaAtual === consultaContadorAtual) {
+                        campoContadorAnterior.value = dados.contador_anterior || "";
+                    }
+                }
+            } catch (erro) {
+                console.error(erro);
+            }
+        }, 300);
+    });
+
     const selectModelo = document.querySelector('select[name="equipamento"]');
 
     if (selectModelo) {
