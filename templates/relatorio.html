@@ -45,13 +45,19 @@
                 {% endfor %}
             </div>
         {% endif %}
+        {% if relatorio.assinatura_cliente %}
+            <img class="rat-campo rat-assinatura-cliente" src="{{ relatorio.assinatura_cliente }}" alt="Assinatura do cliente">
+        {% endif %}
         <div class="rat-campo rat-tecnico">{{ relatorio.tecnico or "-" }}</div>
     </div>
 
     <div class="acoes rat-acoes">
         <button type="button" onclick="window.print()">Imprimir / Salvar em PDF</button>
-        <a href="{{ url_for('novo_relatorio') }}">Novo relatorio</a>
-        <a href="{{ url_for('admin') }}">Voltar ao painel</a>
+        {% if not modo_compartilhado|default(false) %}
+            <a class="botao-whatsapp" href="{{ url_for('enviar_relatorio_whatsapp', relatorio_id=relatorio.id) }}" target="_blank" rel="noopener">Enviar pelo WhatsApp</a>
+            <a href="{{ url_for('novo_relatorio') }}">Novo relatorio</a>
+            <a href="{{ url_for('admin') }}">Voltar ao painel</a>
+        {% endif %}
     </div>
 </section>
 {% endblock %}

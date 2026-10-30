@@ -1,9 +1,9 @@
-from app import app, db
+from app import app, inicializar_banco
 
 
 def criar_tabelas():
     with app.app_context():
-        db.create_all()
+        inicializar_banco()
     print("Banco de dados verificado com sucesso.")
 
 

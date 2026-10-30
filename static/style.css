@@ -859,6 +859,57 @@ button:hover,
     color: #000000 !important;
 }
 
+.rat-assinatura-cliente {
+    top: 273mm !important;
+    left: 7mm !important;
+    width: 75mm !important;
+    height: 12mm !important;
+    object-fit: contain !important;
+    object-position: center bottom !important;
+}
+
+.assinatura-form-section > p {
+    margin: -6px 0 14px;
+}
+
+.assinatura-canvas-wrap {
+    width: 100%;
+    overflow: hidden;
+    border: 1px solid var(--border-strong);
+    border-radius: 10px;
+    background: #ffffff;
+}
+
+.assinatura-canvas {
+    display: block;
+    width: 100%;
+    height: 170px;
+    cursor: crosshair;
+    touch-action: none;
+}
+
+.assinatura-controles {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    margin-top: 10px;
+}
+
+.assinatura-controles small {
+    color: var(--muted);
+}
+
+.botao-whatsapp {
+    background: #168c4a !important;
+    border-color: #168c4a !important;
+}
+
+.botao-whatsapp:hover {
+    background: #11743d !important;
+    border-color: #11743d !important;
+}
+
 @media screen and (max-width: 700px) {
     .pecas-editor-cabecalho {
         align-items: stretch;
@@ -1286,6 +1337,11 @@ button:hover,
         grid-template-columns: 1fr;
         gap: 18px;
         text-align: center;
+    }
+
+    .assinatura-controles {
+        align-items: stretch;
+        flex-direction: column;
     }
 }
 

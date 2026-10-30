@@ -1,0 +1,17 @@
+<div class="form-section assinatura-form-section">
+    <h3>Assinatura do cliente</h3>
+    <p>Peça ao cliente para assinar na tela com o dedo ou uma caneta digital.</p>
+    <div class="assinatura-canvas-wrap">
+        <canvas id="assinatura-cliente-canvas" class="assinatura-canvas" aria-label="Campo para assinatura do cliente"></canvas>
+    </div>
+    <input
+        type="hidden"
+        id="assinatura-cliente-dados"
+        name="assinatura_cliente"
+        value="{{ relatorio.assinatura_cliente if relatorio is defined and relatorio.assinatura_cliente else '' }}"
+    >
+    <div class="assinatura-controles">
+        <small id="assinatura-cliente-status" aria-live="polite">Use o dedo ou a caneta para assinar no quadro.</small>
+        <button type="button" id="limpar-assinatura" class="botao-outline">Limpar assinatura</button>
+    </div>
+</div>

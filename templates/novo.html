@@ -297,6 +297,8 @@
             </div>
         </div>
 
+        {% include "_assinatura_cliente.html" %}
+
         <div class="form-actions">
             <button type="submit">Salvar relatorio</button>
         </div>
@@ -325,6 +327,8 @@
         <button type="button" class="botao-remover-peca" aria-label="Remover peça">Remover</button>
     </div>
 </template>
+
+<script src="{{ url_for('static', filename='assinatura.js') }}" defer></script>
 
 <script>
     const listaPecas = document.getElementById("lista-pecas");

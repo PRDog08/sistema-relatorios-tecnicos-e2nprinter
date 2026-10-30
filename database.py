@@ -1,4 +1,4 @@
-from app import Relatorio, app, db
+from app import Relatorio, app, db, inicializar_banco
 
 
 def _to_dict(relatorio):
@@ -25,6 +25,7 @@ def _to_dict(relatorio):
         "status": relatorio.status,
         "tecnico": relatorio.tecnico,
         "observacoes": relatorio.observacoes,
+        "assinatura_cliente": relatorio.assinatura_cliente,
         "hora_inicio": relatorio.hora_inicio,
         "hora_fim": relatorio.hora_fim,
         "criado_em": relatorio.criado_em,
@@ -33,17 +34,20 @@ def _to_dict(relatorio):
 
 def get_relatorios():
     with app.app_context():
+        inicializar_banco()
         return [_to_dict(item) for item in Relatorio.query.order_by(Relatorio.id.desc()).all()]
 
 
 def get_relatorio_by_id(relatorio_id):
     with app.app_context():
+        inicializar_banco()
         relatorio = Relatorio.query.get(relatorio_id)
         return _to_dict(relatorio) if relatorio else None
 
 
 def create_relatorio(data):
     with app.app_context():
+        inicializar_banco()
         relatorio = Relatorio(
             cliente=data.get("cliente"),
             telefone=data.get("telefone"),
@@ -64,6 +68,7 @@ def create_relatorio(data):
             status=data.get("status") or "Concluido",
             tecnico=data.get("tecnico"),
             observacoes=data.get("observacoes"),
+            assinatura_cliente=data.get("assinatura_cliente"),
             hora_inicio=data.get("hora_inicio"),
             hora_fim=data.get("hora_fim"),
         )
@@ -74,6 +79,7 @@ def create_relatorio(data):
 
 def update_relatorio(relatorio_id, data):
     with app.app_context():
+        inicializar_banco()
         relatorio = Relatorio.query.get_or_404(relatorio_id)
         relatorio.cliente = data.get("cliente")
         relatorio.telefone = data.get("telefone")
@@ -94,6 +100,8 @@ def update_relatorio(relatorio_id, data):
         relatorio.status = data.get("status") or "Concluido"
         relatorio.tecnico = data.get("tecnico")
         relatorio.observacoes = data.get("observacoes")
+        if "assinatura_cliente" in data:
+            relatorio.assinatura_cliente = data.get("assinatura_cliente")
         relatorio.hora_inicio = data.get("hora_inicio")
         relatorio.hora_fim = data.get("hora_fim")
         db.session.commit()
@@ -101,6 +109,7 @@ def update_relatorio(relatorio_id, data):
 
 def delete_relatorio(relatorio_id):
     with app.app_context():
+        inicializar_banco()
         relatorio = Relatorio.query.get_or_404(relatorio_id)
         db.session.delete(relatorio)
         db.session.commit()

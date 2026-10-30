@@ -1,13 +1,17 @@
+import base64
+import binascii
 import json
 import os
 import re
+import secrets
 from datetime import datetime
+from urllib.parse import urlencode
 from urllib.error import URLError
 from urllib.request import urlopen
 
 from flask import Flask, jsonify, redirect, render_template, request, session, url_for
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy import func, or_
+from sqlalchemy import func, inspect, or_, text
 
 
 app = Flask(__name__)
@@ -66,6 +70,10 @@ class Relatorio(db.Model):
     status = db.Column(db.String(50), default="Concluido")
     tecnico = db.Column(db.String(100))
     observacoes = db.Column(db.Text)
+    assinatura_cliente = db.Column(db.Text)
+    token_compartilhamento = db.Column(
+        db.String(64), default=lambda: secrets.token_urlsafe(32), index=True
+    )
     criado_em = db.Column(db.DateTime, default=datetime.utcnow)
 
     @property
@@ -131,6 +139,30 @@ def clean(texto):
 
 def apenas_numeros(texto):
     return re.sub(r"\D", "", texto or "")
+
+
+def assinatura_do_formulario(form):
+    valor = (form.get("assinatura_cliente") or "").strip()
+    if not valor:
+        return None, None
+
+    prefixo = "data:image/png;base64,"
+    if not valor.startswith(prefixo) or len(valor) > 1_400_000:
+        return None, "Assinatura invalida ou muito grande. Limpe o campo e tente novamente."
+
+    try:
+        imagem = base64.b64decode(valor[len(prefixo):], validate=True)
+    except (binascii.Error, ValueError):
+        return None, "Nao foi possivel ler a imagem da assinatura."
+
+    if len(imagem) > 1_000_000 or not imagem.startswith(b"\x89PNG\r\n\x1a\n"):
+        return None, "A assinatura precisa ser uma imagem PNG valida de ate 1 MB."
+
+    return valor, None
+
+
+def novo_token_compartilhamento():
+    return secrets.token_urlsafe(32)
 
 
 def formatar_cep(texto):
@@ -318,6 +350,24 @@ def variaveis_globais():
 def inicializar_banco():
     if not app.db_initialized:
         db.create_all()
+        colunas = {coluna["name"] for coluna in inspect(db.engine).get_columns("relatorios")}
+        with db.engine.begin() as conexao:
+            if "assinatura_cliente" not in colunas:
+                conexao.execute(text("ALTER TABLE relatorios ADD COLUMN assinatura_cliente TEXT"))
+            if "token_compartilhamento" not in colunas:
+                conexao.execute(text("ALTER TABLE relatorios ADD COLUMN token_compartilhamento VARCHAR(64)"))
+            conexao.execute(text(
+                "CREATE INDEX IF NOT EXISTS ix_relatorios_token_compartilhamento "
+                "ON relatorios (token_compartilhamento)"
+            ))
+
+        relatorios_sem_token = Relatorio.query.filter(
+            or_(Relatorio.token_compartilhamento.is_(None), Relatorio.token_compartilhamento == "")
+        ).all()
+        for relatorio in relatorios_sem_token:
+            relatorio.token_compartilhamento = novo_token_compartilhamento()
+        if relatorios_sem_token:
+            db.session.commit()
         app.db_initialized = True
 
 
@@ -561,6 +611,10 @@ def criar_relatorio():
     if erro:
         return erro, 400
 
+    assinatura_cliente, erro_assinatura = assinatura_do_formulario(request.form)
+    if erro_assinatura:
+        return erro_assinatura, 400
+
     relatorio = Relatorio(
         cliente=clean(request.form.get("cliente")),
         responsavel=clean(request.form.get("responsavel")),
@@ -583,12 +637,14 @@ def criar_relatorio():
         status=clean(request.form.get("status")) or "Concluido",
         tecnico=clean(request.form.get("tecnico")),
         observacoes=clean(request.form.get("observacoes")),
+        assinatura_cliente=assinatura_cliente,
+        token_compartilhamento=novo_token_compartilhamento(),
     )
 
     db.session.add(relatorio)
     db.session.commit()
 
-    return redirect(url_for("admin"))
+    return redirect(url_for("ver_relatorio", relatorio_id=relatorio.id))
 
 
 @app.route("/editar_relatorio/<int:relatorio_id>", methods=["GET", "POST"])
@@ -605,6 +661,10 @@ def editar_relatorio(relatorio_id):
         erro = validar_relatorio(request.form)
         if erro:
             return erro, 400
+
+        assinatura_cliente, erro_assinatura = assinatura_do_formulario(request.form)
+        if erro_assinatura:
+            return erro_assinatura, 400
 
         relatorio.cliente = clean(request.form.get("cliente"))
         relatorio.responsavel = clean(request.form.get("responsavel"))
@@ -627,6 +687,7 @@ def editar_relatorio(relatorio_id):
         relatorio.status = clean(request.form.get("status")) or "Concluido"
         relatorio.tecnico = clean(request.form.get("tecnico"))
         relatorio.observacoes = clean(request.form.get("observacoes"))
+        relatorio.assinatura_cliente = assinatura_cliente
 
         db.session.commit()
         return redirect(url_for("admin"))
@@ -661,6 +722,50 @@ def ver_relatorio(relatorio_id):
         pecas_legadas=pecas["legado"],
         contador_anterior=buscar_contador_anterior(relatorio.numero_serie, antes_id=relatorio.id),
     )
+
+
+@app.route("/compartilhado/<token>")
+def relatorio_compartilhado(token):
+    relatorio = Relatorio.query.filter_by(token_compartilhamento=token).first_or_404()
+    pecas = ler_pecas(relatorio.pecas)
+    return render_template(
+        "relatorio.html",
+        relatorio=relatorio,
+        pecas_relatorio=pecas["itens"],
+        pecas_legadas=pecas["legado"],
+        contador_anterior=buscar_contador_anterior(relatorio.numero_serie, antes_id=relatorio.id),
+        modo_compartilhado=True,
+    )
+
+
+@app.route("/relatorio/<int:relatorio_id>/whatsapp")
+def enviar_relatorio_whatsapp(relatorio_id):
+    bloqueio = exigir_login()
+    if bloqueio:
+        return bloqueio
+
+    relatorio = Relatorio.query.get_or_404(relatorio_id)
+    telefone = apenas_numeros(relatorio.telefone)
+    if len(telefone) not in (10, 11):
+        return "O telefone do cliente precisa ter DDD e 10 ou 11 numeros.", 400
+
+    caminho_relatorio = url_for(
+        "relatorio_compartilhado",
+        token=relatorio.token_compartilhamento,
+        _external=False,
+    )
+    base_publica = (
+        os.getenv("PUBLIC_BASE_URL")
+        or os.getenv("RENDER_EXTERNAL_URL")
+        or request.url_root
+    ).rstrip("/")
+    link_relatorio = f"{base_publica}{caminho_relatorio}"
+    mensagem = (
+        f"Ola, {relatorio.responsavel or relatorio.cliente}! Segue o relatorio tecnico "
+        f"do atendimento #{relatorio.id}: {link_relatorio}"
+    )
+    destino = f"https://wa.me/55{telefone}?{urlencode({'text': mensagem})}"
+    return redirect(destino)
 
 
 @app.route("/excluir/<int:relatorio_id>", methods=["POST"])
